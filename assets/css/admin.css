@@ -1,0 +1,91 @@
+.wppw-settings-wrap .wppw-section {
+	position: relative;
+	padding: 4px 16px 16px;
+	background: #fff;
+	border: 1px solid #ccd0d4;
+	margin-bottom: 20px;
+	border-radius: 3px;
+}
+
+.wppw-settings-wrap .wppw-locked {
+	opacity: 0.55;
+	pointer-events: none;
+	user-select: none;
+}
+
+.wppw-settings-wrap .wppw-premium-badge {
+	position: absolute;
+	top: 14px;
+	right: 16px;
+	background: #f0b429;
+	color: #333;
+	font-size: 12px;
+	font-weight: 600;
+	padding: 3px 12px;
+	border-radius: 20px;
+	pointer-events: none;
+}
+
+.wppw-settings-wrap .wppw-upgrade-btn {
+	font-size: 14px;
+	height: auto;
+	padding: 8px 18px;
+}
+
+/* Align color picker swatches correctly */
+.wppw-settings-wrap .wp-picker-container {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+/* Font Awesome quick-pick grid */
+.wppw-fa-quick-pick {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 10px;
+}
+
+.wppw-fa-tile {
+	width: 36px;
+	height: 36px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid #ccd0d4;
+	border-radius: 4px;
+	background: #f6f7f7;
+	cursor: pointer;
+	font-size: 16px;
+	color: #555;
+	padding: 0;
+	transition: border-color 0.15s, background 0.15s;
+}
+
+.wppw-fa-tile:hover {
+	border-color: #0073aa;
+	background: #e8f3fb;
+	color: #0073aa;
+}
+
+.wppw-fa-tile--active {
+	border-color: #0073aa;
+	background: #0073aa;
+	color: #fff;
+}
+
+/* Manual input + live preview */
+.wppw-fa-custom {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 6px;
+}
+
+.wppw-fa-live-preview {
+	font-size: 22px;
+	color: #555;
+	min-width: 28px;
+	text-align: center;
+}
