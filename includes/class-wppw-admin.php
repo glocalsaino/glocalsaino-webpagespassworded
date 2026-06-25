@@ -333,6 +333,143 @@ class WebPagesPW_Admin {
 				</div>
 			</form>
 
+			<!-- ══════════════════════════════════════
+			     SECCIÓN 4 · Enlaces mágicos (premium)
+			     ══════════════════════════════════════ -->
+			<?php $this->render_magic_links_section( $is_premium, $locked ); ?>
+
+		</div>
+		<?php
+	}
+
+	private function render_magic_links_section( bool $is_premium, string $locked ): void {
+		$magic           = new WebPagesPW_MagicLinks();
+		$protected_pages = $magic->get_protected_pages();
+		$links           = $magic->get_links();
+		?>
+		<div class="wppw-section<?php echo esc_attr( $locked ); ?>">
+			<?php $this->premium_badge( $is_premium ); ?>
+			<h2><?php esc_html_e( 'Enlaces mágicos', 'wppw' ); ?></h2>
+			<p class="description"><?php esc_html_e( 'Genera enlaces que dan acceso directo a una página protegida sin pedir la contraseña. Útiles para compartir con un cliente o colaborador concreto.', 'wppw' ); ?></p>
+
+			<?php if ( isset( $_GET['wppw_magic_created'] ) ) : ?>
+				<div class="notice notice-success inline"><p><?php esc_html_e( 'Enlace generado correctamente.', 'wppw' ); ?></p></div>
+			<?php elseif ( isset( $_GET['wppw_magic_error'] ) ) : ?>
+				<div class="notice notice-error inline"><p><?php esc_html_e( 'Selecciona una página que tenga contraseña configurada.', 'wppw' ); ?></p></div>
+			<?php endif; ?>
+
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<input type="hidden" name="action" value="wppw_magic_create" />
+				<?php wp_nonce_field( 'wppw_magic_create' ); ?>
+				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row"><label for="wppw_magic_page"><?php esc_html_e( 'Página protegida', 'wppw' ); ?></label></th>
+						<td>
+							<select id="wppw_magic_page" name="page_id" <?php disabled( ! $is_premium ); ?>>
+								<?php foreach ( $protected_pages as $p ) : ?>
+									<option value="<?php echo esc_attr( $p->ID ); ?>"><?php echo esc_html( $p->post_title ); ?></option>
+								<?php endforeach; ?>
+							</select>
+							<?php if ( empty( $protected_pages ) ) : ?>
+								<p class="description"><?php esc_html_e( 'No hay páginas protegidas con contraseña todavía.', 'wppw' ); ?></p>
+							<?php endif; ?>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="wppw_magic_label"><?php esc_html_e( 'Etiqueta (opcional)', 'wppw' ); ?></label></th>
+						<td>
+							<input type="text" id="wppw_magic_label" name="label" class="regular-text"
+								placeholder="<?php esc_attr_e( 'Ej. Cliente Pérez', 'wppw' ); ?>"
+								<?php disabled( ! $is_premium ); ?> />
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="wppw_magic_expires"><?php esc_html_e( 'Caducidad', 'wppw' ); ?></label></th>
+						<td>
+							<select id="wppw_magic_expires" name="expires_in" <?php disabled( ! $is_premium ); ?>>
+								<option value="0"><?php esc_html_e( 'Nunca', 'wppw' ); ?></option>
+								<option value="86400"><?php esc_html_e( '1 día', 'wppw' ); ?></option>
+								<option value="604800" selected><?php esc_html_e( '7 días', 'wppw' ); ?></option>
+								<option value="2592000"><?php esc_html_e( '30 días', 'wppw' ); ?></option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="wppw_magic_uses"><?php esc_html_e( 'Usos máximos', 'wppw' ); ?></label></th>
+						<td>
+							<select id="wppw_magic_uses" name="max_uses" <?php disabled( ! $is_premium ); ?>>
+								<option value="0"><?php esc_html_e( 'Ilimitado', 'wppw' ); ?></option>
+								<option value="1"><?php esc_html_e( '1 uso', 'wppw' ); ?></option>
+								<option value="5"><?php esc_html_e( '5 usos', 'wppw' ); ?></option>
+								<option value="10"><?php esc_html_e( '10 usos', 'wppw' ); ?></option>
+							</select>
+						</td>
+					</tr>
+				</table>
+				<?php if ( $is_premium ) : ?>
+					<?php submit_button( __( 'Generar enlace', 'wppw' ) ); ?>
+				<?php else : ?>
+					<p><a href="<?php echo esc_url( wppw_get_upgrade_url() ); ?>" class="button wppw-upgrade-btn">&#11088; <?php esc_html_e( 'Actualizar a Premium', 'wppw' ); ?></a></p>
+				<?php endif; ?>
+			</form>
+
+			<?php if ( $is_premium && ! empty( $links ) ) : ?>
+				<h3><?php esc_html_e( 'Enlaces existentes', 'wppw' ); ?></h3>
+				<table class="widefat striped wppw-magic-table">
+					<thead>
+						<tr>
+							<th><?php esc_html_e( 'Página', 'wppw' ); ?></th>
+							<th><?php esc_html_e( 'Etiqueta', 'wppw' ); ?></th>
+							<th><?php esc_html_e( 'Enlace', 'wppw' ); ?></th>
+							<th><?php esc_html_e( 'Caduca', 'wppw' ); ?></th>
+							<th><?php esc_html_e( 'Usos', 'wppw' ); ?></th>
+							<th><?php esc_html_e( 'Estado', 'wppw' ); ?></th>
+							<th><?php esc_html_e( 'Acciones', 'wppw' ); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ( $links as $token => $link ) :
+							$page_title = get_the_title( $link['page_id'] );
+							$page_title = $page_title ? $page_title : ( '#' . $link['page_id'] );
+							$link_url   = $magic->get_link_url( $token, $link['page_id'] );
+							$expired    = $magic->is_expired( $link );
+							$exhausted  = $magic->is_exhausted( $link );
+							$uses_label = $link['uses'] . ( $link['max_uses'] ? ' / ' . $link['max_uses'] : '' );
+							?>
+							<tr>
+								<td><?php echo esc_html( $page_title ); ?></td>
+								<td><?php echo esc_html( $link['label'] ? $link['label'] : '—' ); ?></td>
+								<td>
+									<input type="text" readonly class="wppw-magic-url-field" value="<?php echo esc_url( $link_url ); ?>" onclick="this.select();" />
+									<button type="button" class="button wppw-copy-link" data-url="<?php echo esc_url( $link_url ); ?>"><?php esc_html_e( 'Copiar', 'wppw' ); ?></button>
+								</td>
+								<td><?php echo $link['expires'] ? esc_html( date_i18n( 'd/m/Y H:i', $link['expires'] ) ) : esc_html__( 'Nunca', 'wppw' ); ?></td>
+								<td><?php echo esc_html( $uses_label ); ?></td>
+								<td>
+									<?php if ( $expired ) : ?>
+										<span class="wppw-status wppw-status--expired"><?php esc_html_e( 'Caducado', 'wppw' ); ?></span>
+									<?php elseif ( $exhausted ) : ?>
+										<span class="wppw-status wppw-status--exhausted"><?php esc_html_e( 'Agotado', 'wppw' ); ?></span>
+									<?php else : ?>
+										<span class="wppw-status wppw-status--active"><?php esc_html_e( 'Activo', 'wppw' ); ?></span>
+									<?php endif; ?>
+								</td>
+								<td>
+									<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="display:inline;">
+										<input type="hidden" name="action" value="wppw_magic_revoke" />
+										<input type="hidden" name="token" value="<?php echo esc_attr( $token ); ?>" />
+										<?php wp_nonce_field( 'wppw_magic_revoke' ); ?>
+										<button type="submit" class="button-link-delete"
+											onclick="return confirm('<?php echo esc_js( __( '¿Revocar este enlace? Dejará de funcionar inmediatamente.', 'wppw' ) ); ?>');">
+											<?php esc_html_e( 'Revocar', 'wppw' ); ?>
+										</button>
+									</form>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			<?php endif; ?>
 		</div>
 		<?php
 	}
