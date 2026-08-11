@@ -31,7 +31,7 @@ class WebPagesPW_MagicLinks {
 
 		if ( $this->is_expired( $link ) || $this->is_exhausted( $link ) ) {
 			if ( ! empty( $link['fallback_url'] ) ) {
-				wp_safe_redirect( $link['fallback_url'] );
+				wp_redirect( $link['fallback_url'] ); // wp_safe_redirect rejects external URLs
 				exit;
 			}
 			return;
