@@ -9,12 +9,11 @@ class WebPagesPW_Core {
 		global $post;
 
 		$settings = wppw_get_settings();
-		$premium  = wppw_is_premium();
 
 		// Global label from settings (free) takes precedence over shortcode default, but shortcode attr overrides all.
 		$default_label = ! empty( $settings['button_label'] )
 			? $settings['button_label']
-			: __( 'Enter', 'wppw' );
+			: __( 'Enter', 'webpagespassworded' );
 
 		$atts = shortcode_atts(
 			[
@@ -29,29 +28,34 @@ class WebPagesPW_Core {
 		$label   = esc_html( $atts['label'] );
 		$parent  = (int) $atts['parent'];
 
-		// Premium: custom error messages.
-		$msg_wrong_pw = ( $premium && ! empty( $settings['msg_wrong_pw'] ) )
-			? esc_html( $settings['msg_wrong_pw'] )
-			: esc_html__( 'La contraseña es incorrecta.', 'wppw' );
+		$msg_wrong_pw = esc_html__( 'La contraseña es incorrecta.', 'webpagespassworded' );
+		$msg_lockout  = esc_html__( 'Demasiados intentos fallidos. Espera 15 minutos antes de intentarlo de nuevo.', 'webpagespassworded' );
 
-		$msg_lockout = ( $premium && ! empty( $settings['msg_lockout'] ) )
-			? esc_html( $settings['msg_lockout'] )
-			: esc_html__( 'Demasiados intentos fallidos. Espera 15 minutos antes de intentarlo de nuevo.', 'wppw' );
+		if ( web_fs() && web_fs()->can_use_premium_code__premium_only() ) {
+			if ( ! empty( $settings['msg_wrong_pw'] ) ) {
+				$msg_wrong_pw = esc_html( $settings['msg_wrong_pw'] );
+			}
+			if ( ! empty( $settings['msg_lockout'] ) ) {
+				$msg_lockout = esc_html( $settings['msg_lockout'] );
+			}
+		}
 
 		// Premium: Font Awesome icon with configurable position.
 		$button_inner = $label;
-		if ( $premium && ! empty( $settings['btn_icon_fa'] ) ) {
-			$icon_class   = esc_attr( $settings['btn_icon_fa'] );
-			$icon_pos     = $settings['btn_icon_position'] ?? 'left';
-			$icon_tag     = "<i class=\"{$icon_class}\" aria-hidden=\"true\"></i>";
-			$label_span   = "<span class=\"wppw-btn-label\">{$label}</span>";
+		if ( web_fs() && web_fs()->can_use_premium_code__premium_only() ) {
+			if ( ! empty( $settings['btn_icon_fa'] ) ) {
+				$icon_class = esc_attr( $settings['btn_icon_fa'] );
+				$icon_pos   = $settings['btn_icon_position'] ?? 'left';
+				$icon_tag   = "<i class=\"{$icon_class}\" aria-hidden=\"true\"></i>";
+				$label_span = "<span class=\"wppw-btn-label\">{$label}</span>";
 
-			if ( 'top' === $icon_pos ) {
-				$button_inner = "{$icon_tag}{$label_span}";
-			} elseif ( 'right' === $icon_pos ) {
-				$button_inner = "{$label_span}{$icon_tag}";
-			} else { // left (default)
-				$button_inner = "{$icon_tag}{$label_span}";
+				if ( 'top' === $icon_pos ) {
+					$button_inner = "{$icon_tag}{$label_span}";
+				} elseif ( 'right' === $icon_pos ) {
+					$button_inner = "{$label_span}{$icon_tag}";
+				} else {
+					$button_inner = "{$icon_tag}{$label_span}";
+				}
 			}
 		}
 
@@ -61,9 +65,10 @@ class WebPagesPW_Core {
 		$result  = "<div class=\"wppw-form-wrapper\">\n";
 		$result .= "<form id=\"{$form_id}\" method=\"post\" action=\"{$permalink}\">\n";
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- these GET flags are set internally by process_form(), not by user input.
 		if ( isset( $_GET['wppwlocked'] ) ) {
 			$result .= "<p id=\"wppwError\">{$msg_lockout}</p>\n";
-		} elseif ( isset( $_GET['wrongpw'] ) ) {
+		} elseif ( isset( $_GET['wrongpw'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$result .= "<p id=\"wppwError\">{$msg_wrong_pw}</p>\n";
 		}
 
@@ -78,7 +83,8 @@ class WebPagesPW_Core {
 	}
 
 	private function get_client_ip(): string {
-		return isset( $_SERVER['REMOTE_ADDR'] ) ? (string) $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- REMOTE_ADDR is a server value, not user input; sanitize_text_field strips valid IPv6 chars.
+		return isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '0.0.0.0';
 	}
 
 	private function ip_transient_key( string $prefix ): string {
@@ -115,7 +121,7 @@ class WebPagesPW_Core {
 		}
 
 		$cookiePW = $wp_hasher->HashPassword( $cookiePW );
-		$secure   = ( 'https' === parse_url( home_url(), PHP_URL_SCHEME ) );
+		$secure   = ( 'https' === wp_parse_url( home_url(), PHP_URL_SCHEME ) );
 
 		setcookie(
 			'wp-postpass_' . COOKIEHASH,
@@ -149,6 +155,7 @@ class WebPagesPW_Core {
 		}
 
 		$parentForm   = (int) $_POST['wppwParent'];
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- passwords cannot be sanitized without corrupting special characters.
 		$postPassword = wp_unslash( (string) $_POST['wppwPassword'] );
 
 		$args = [

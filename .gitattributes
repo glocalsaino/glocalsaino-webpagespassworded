@@ -1,0 +1,4 @@
+# Files excluded from plugin distribution zips.
+.gitattributes export-ignore
+.gitignore     export-ignore
+.DS_Store      export-ignore

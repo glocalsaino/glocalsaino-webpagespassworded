@@ -3,6 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals -- web_fs, $web_fs and web_fs_loaded are required by the Freemius SDK and cannot be renamed.
 if ( ! function_exists( 'web_fs' ) ) {
 
 	function web_fs() {
@@ -50,6 +51,7 @@ if ( ! function_exists( 'web_fs' ) ) {
 	web_fs();
 	do_action( 'web_fs_loaded' );
 }
+// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals
 
 // Internal aliases used throughout the plugin.
 

@@ -2,175 +2,173 @@
 Contributors: rafamm-glocalsaino
 Tags: password, protected pages, child pages, access control, shortcode
 Requires at least: 5.0
-Tested up to: 6.7
+Tested up to: 7.0
 Stable tag: 4.3.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Página de acceso centralizada para páginas hijo protegidas con contraseña. El shortcode [wppw] muestra un formulario que redirige al visitante a la página correcta.
+Single password form for groups of password-protected child pages. Enter the password and get redirected to the right child page automatically.
 
 == Description ==
 
-**WebPagesPassworded** permite crear una página de acceso única que actúa como puerta de entrada a un conjunto de páginas hijo protegidas con contraseña. Basta con colocar el shortcode `[wppw]` en la página padre: el plugin genera un formulario de contraseña y, al introducir la correcta, redirige automáticamente al visitante a la página hijo que tenga esa contraseña asignada.
+**WebPagesPassworded** creates a single access page that acts as a gateway for a group of password-protected child pages. Place the `[wppw]` shortcode on a parent page: the plugin renders a password form and, on a correct match, redirects the visitor directly to the matching child page.
 
-= Cómo funciona =
+= How it works =
 
-1. En WordPress se crea una página padre (p. ej. "Acceso privado") y se marcan como hijo suyas las páginas que se quieren proteger.
-2. Cada página hijo lleva su propia contraseña configurada desde **Publicar → Visibilidad → Protegido con contraseña** en el editor de WordPress.
-3. El shortcode `[wppw]` se inserta en la página padre.
-4. Cuando un visitante llega a esa página, ve el formulario de contraseña del plugin. Si la contraseña coincide con la de alguna página hijo, es redirigido a ella automáticamente.
+1. In WordPress, create a parent page (e.g. "Private Area") and set the pages you want to protect as its children.
+2. Assign each child page its own password via **Publish → Visibility → Password protected** in the editor.
+3. Insert the `[wppw]` shortcode on the parent page.
+4. When a visitor arrives, they see the plugin's password form. If the password matches a child page, they are redirected to it automatically.
 
-= Características =
+= Features =
 
-* **Un único punto de acceso** — una sola página con el shortcode da entrada a todas las páginas hijo protegidas.
-* **Redirección automática** — el visitante llega directamente a la página correcta sin pasos adicionales.
-* **Cookie de sesión** — la contraseña se almacena en una cookie durante 10 días para que el visitante no tenga que volver a introducirla en visitas sucesivas.
-* **Nonce de seguridad** — el formulario incluye un nonce de WordPress para proteger el envío contra ataques CSRF.
-* **Mensaje de error claro** — si la contraseña es incorrecta se muestra un aviso en el mismo formulario.
-* **Protección contra fuerza bruta** — tras 5 intentos fallidos desde la misma IP, el acceso queda bloqueado durante 15 minutos. El bloqueo se almacena mediante transients de WordPress, sin tablas adicionales.
-* **Cookie segura** — la cookie de sesión se establece con los flags `HttpOnly` y `SameSite=Strict` para impedir su lectura desde JavaScript y su envío en peticiones cruzadas.
-* **Sin dependencias externas** — el plugin no carga ninguna librería ni recurso externo.
+* **Single entry point** — one page with the shortcode gives access to all protected child pages.
+* **Automatic redirect** — the visitor lands directly on the right page without extra steps.
+* **Session cookie** — the password is stored in a cookie for 10 days so the visitor does not need to re-enter it on subsequent visits.
+* **Security nonce** — the form includes a WordPress nonce to guard submissions against CSRF attacks.
+* **Clear error message** — if the password is wrong, an error is shown inline in the same form.
+* **Brute-force protection** — after 5 failed attempts from the same IP, access is locked for 15 minutes. The lockout uses WordPress transients, with no extra database tables.
+* **Secure cookie** — the session cookie is set with `HttpOnly` and `SameSite=Strict` flags to block JavaScript access and cross-site submission.
+* **No external dependencies** — the plugin loads no external libraries or remote resources.
 
-= Uso =
+= Usage =
 
-Inserta el shortcode en la página padre que actuará como formulario de acceso:
+Insert the shortcode on the parent page that will act as the access form:
 
 `[wppw]`
 
-Parámetros opcionales del shortcode:
+Optional shortcode parameters:
 
-* `label` — texto del botón de envío. Por defecto: `Enter`.
-* `id` — atributo `id` del elemento `<form>`. Por defecto: `wppwLogin`.
-* `parent` — ID de la página padre cuyos hijos se buscarán. Por defecto: ID de la página actual.
+* `label` — submit button text. Default: `Enter`.
+* `id` — `id` attribute of the `<form>` element. Default: `wppwLogin`.
+* `parent` — ID of the parent page whose children will be searched. Default: the current page ID.
 
-Ejemplo con parámetros:
+Example with parameters:
 
-`[wppw label="Acceder" id="mi-formulario"]`
+`[wppw label="Log in" id="my-form"]`
 
-= Requisitos =
+= Requirements =
 
-* WordPress 5.0 o superior.
-* PHP 7.4 o superior.
-* Las páginas hijo deben estar publicadas y tener contraseña configurada desde el editor de WordPress.
+* WordPress 5.0 or higher.
+* PHP 7.4 or higher.
+* Child pages must be published and have a password configured from the WordPress editor.
 
 == Screenshots ==
 
-1. Formulario de contraseña en el front-end, con icono y estilos personalizados mediante la versión premium.
-2. Panel de ajustes: sección de ajustes generales (texto del botón y referencia del shortcode) y sección de mensajes de error personalizables (premium).
-3. Panel de ajustes: sección de diseño del formulario con selector de colores, tamaños y cuadrícula de iconos de Font Awesome (premium).
-4. Panel de ajustes: sección de enlaces mágicos con formulario de creación y tabla de enlaces existentes con estado y acciones (premium).
+1. Password form on the front-end, with a custom icon and styles applied via the premium version.
+2. Settings panel: general settings section (button text and shortcode reference) and customisable error messages (premium).
+3. Settings panel: form design section with colour pickers, font size controls, and a Font Awesome icon picker (premium).
+4. Settings panel: magic links section with the creation form and a table of existing links showing status and actions (premium).
 
 == Installation ==
 
-1. Sube la carpeta `wp-webpagespassworded` a `/wp-content/plugins/`.
-2. Activa el plugin desde **Plugins → Plugins instalados**.
-3. Crea una página padre y añade las páginas hijo con sus contraseñas desde **Publicar → Visibilidad → Protegido con contraseña**.
-4. Inserta `[wppw]` en la página padre.
+1. Upload the `webpagespassworded` folder to `/wp-content/plugins/`.
+2. Activate the plugin from **Plugins → Installed Plugins**.
+3. Create a parent page and add child pages with their passwords via **Publish → Visibility → Password protected**.
+4. Insert `[wppw]` on the parent page.
 
 == Frequently Asked Questions ==
 
-= ¿Puedo tener varias páginas padre con sus propios grupos de páginas hijo? =
+= Can I have several parent pages each with their own group of child pages? =
 
-Sí. El shortcode `[wppw]` colocado en cada página padre buscará únicamente entre sus páginas hijo directas. Cada grupo es independiente.
+Yes. The `[wppw]` shortcode placed on each parent page searches only among its direct child pages. Each group is independent.
 
-= ¿Qué ocurre si dos páginas hijo tienen la misma contraseña? =
+= What happens if two child pages share the same password? =
 
-El visitante es redirigido a la página hijo más reciente (por fecha de publicación) que coincida con la contraseña introducida.
+The visitor is redirected to the most recently published child page that matches the entered password.
 
-= ¿Cuánto tiempo dura la cookie de acceso? =
+= How long does the access cookie last? =
 
-10 días. Pasado ese tiempo, o si el visitante borra las cookies del navegador, tendrá que introducir la contraseña de nuevo.
+10 days. After that, or if the visitor clears their browser cookies, they will need to enter the password again.
 
-= ¿Funciona con HTTPS? =
+= Does it work with HTTPS? =
 
-Sí. Si el sitio usa HTTPS la cookie se marca automáticamente como `Secure`.
+Yes. If the site uses HTTPS the cookie is automatically marked as `Secure`.
 
-= Introduje la contraseña correcta pero me aparece el mensaje de bloqueo. ¿Qué hago? =
+= I entered the correct password but I see the lockout message. What should I do? =
 
-El bloqueo dura 15 minutos y está ligado a la IP. Si eres el administrador y necesitas desbloquearte antes de que expire, ve a **Herramientas → Site Health → Info** para confirmar tu IP y luego elimina manualmente los transients con prefijo `wppw_lock_` y `wppw_fail_` desde la base de datos o con un plugin de gestión de transients.
+The lockout lasts 15 minutes and is tied to the IP address. If you are the administrator and need to clear it early, delete the transients with the prefix `wppw_lock_` and `wppw_fail_` from the database or with a transient management plugin.
 
-= ¿Es compatible con plugins de exclusión de páginas? =
+= Is it compatible with page-exclusion plugins? =
 
-Sí. Si el sitio tiene instalado un plugin con las funciones `pause_exclude_pages()` / `resume_exclude_pages()` (patrón habitual en plugins de exclusión de menús y listados), WebPagesPassworded las llama antes y después de consultar las páginas hijo para garantizar que las páginas protegidas sean siempre encontradas.
+Yes. If the site has a plugin that exposes `pause_exclude_pages()` / `resume_exclude_pages()` (a common pattern in menu and listing exclusion plugins), WebPagesPassworded calls them around its query to ensure protected pages are always found.
 
-= La contraseña es correcta pero no se redirige al visitante. ¿Qué puede pasar? =
+= The password is correct but the visitor is not redirected. What could be wrong? =
 
-Comprueba que:
+Check that:
 
-* La página hijo está publicada (no en borrador).
-* La página hijo es hija directa de la página que contiene el shortcode, no nieta.
-* La contraseña en WordPress se guarda sin espacios adicionales al principio o al final.
+* The child page is published (not a draft).
+* The child page is a direct child of the page containing the shortcode, not a grandchild.
+* The password in WordPress is saved without leading or trailing spaces.
 
 == Privacy Policy ==
 
-WebPagesPassworded no recopila, almacena ni transmite ningún dato personal.
+WebPagesPassworded does not collect, store, or transmit any personal data.
 
-* El plugin lee la contraseña introducida en el formulario únicamente para compararla con las contraseñas de las páginas hijo almacenadas en la base de datos de WordPress. Esa comparación ocurre íntegramente en el servidor y el dato no se guarda ni se envía a ningún tercero.
-* Se almacena una cookie (`wp-postpass_*`) en el navegador del visitante para mantener el acceso activo durante 10 días. Esta cookie es estándar de WordPress y solo contiene el hash de la contraseña, nunca la contraseña en texto claro.
-* No se realizan conexiones externas de ningún tipo.
+* The plugin reads the password entered in the form only to compare it against the passwords of the child pages stored in the WordPress database. That comparison happens entirely on the server and the data is not saved or sent to any third party.
+* A cookie (`wp-postpass_*`) is stored in the visitor's browser to maintain access for 10 days. This is a standard WordPress cookie and contains only the hash of the password, never the password in plain text.
+* No external connections of any kind are made.
 
 == Upgrade Notice ==
 
 = 4.3.0 =
-La función login links se ha movido al plugin independiente WP Login Links. No requiere ninguna acción de migración en WebPagesPassworded.
+The login links feature has been moved to the standalone WP Login Links plugin. No migration needed in WebPagesPassworded.
 
 = 4.1.0 =
-Nueva funcionalidad premium: enlaces mágicos para dar acceso directo sin contraseña. No requiere ninguna acción de migración.
+New premium feature: magic links for direct access without a password. No migration required.
 
 = 4.0.0 =
-Versión mayor con integración Freemius y funcionalidades premium. Compatible con versiones anteriores: el shortcode `[wppw]` sigue funcionando igual.
+Major version with Freemius integration and premium features. Backwards compatible: the `[wppw]` shortcode continues to work as before.
+
+= 3.1.0 =
+Recommended security update. Adds brute-force protection and improves session cookie flags.
+
+= 3.0.0 =
+The shortcode has changed from `[smartpwpages]` to `[wppw]`. Replace the shortcode on all pages where it is inserted.
 
 == Changelog ==
 
 = 4.3.0 =
-* La funcionalidad de login links se ha extraído al plugin independiente WP Login Links.
+* The login links feature has been extracted to the standalone WP Login Links plugin.
 
 = 4.2.0 =
-* Nueva funcionalidad premium: login links. Genera enlaces firmados que autentican a un usuario de WordPress directamente, sin necesidad de introducir contraseña.
-* El token del login link es un valor aleatorio de 256 bits; nunca contiene ni expone las credenciales del usuario.
-* Caducidad y límite de usos configurables (por defecto: 1 día, 1 uso).
-* URL de redirección post-login configurable por enlace.
-* Panel de administración para crear, listar y revocar login links, con copia al portapapeles en un clic.
+* New premium feature: login links. Generates signed links that authenticate a WordPress user directly, without entering a password.
+* The login link token is a 256-bit random value; it never contains or exposes user credentials.
+* Configurable expiry and maximum uses (default: 1 day, 1 use).
+* Configurable post-login redirect URL per link.
+* Admin panel for creating, listing, and revoking login links, with one-click clipboard copy.
 
 = 4.1.0 =
-* Nueva funcionalidad premium: enlaces mágicos. Genera enlaces que dan acceso directo a una página protegida sin pedir la contraseña.
-* Los enlaces mágicos usan un token aleatorio de 256 bits (no la contraseña real), con caducidad y límite de usos configurables.
-* Panel de administración para crear, listar y revocar enlaces mágicos, con copia al portapapeles de un clic.
-* Corregido el enqueue de Font Awesome: se cargaba demasiado tarde dentro de wp_head y nunca llegaba a imprimirse.
-* Sustituida la detección por has_shortcode() (fallaba con Elementor y otros maquetadores) por una comprobación basada en is_singular().
-* Añadido !important a los valores de CSS generados para evitar que los estilos del tema activo sobrescriban el diseño configurado.
+* New premium feature: magic links. Generates links that grant direct access to a protected page without asking for the password.
+* Magic links use a 256-bit random token (not the real password), with configurable expiry and maximum uses.
+* Admin panel for creating, listing, and revoking magic links, with one-click clipboard copy.
+* Fixed Font Awesome enqueue: it was loading too late inside wp_head and never printing.
+* Replaced has_shortcode() detection (which failed with Elementor and other page builders) with a check based on is_singular().
+* Added !important to generated CSS values to prevent the active theme from overriding the configured design.
 
 = 4.0.0 =
-* Integración con Freemius para gestión de licencias y versión premium.
-* Nuevo panel en Ajustes → WebPagesPassworded con secciones gratuitas y premium.
-* Premium: texto del botón personalizable desde el panel de ajustes.
-* Premium: mensajes de error personalizables (contraseña incorrecta y bloqueo por intentos).
-* Premium: diseño del formulario configurable (colores de fondo, texto y borde del campo; colores, tamaño y fuente del botón).
-* Premium: icono personalizable dentro del botón, seleccionado desde la biblioteca de medios.
-* Premium: espaciado configurable entre el campo de contraseña y el botón.
-* Código refactorizado en clases separadas (`class-wppw-core.php`, `class-wppw-admin.php`, `class-wppw-styles.php`).
-* Botón cambiado de `<input type="submit">` a `<button type="submit">` para permitir contenido HTML (icono).
-* CSS del formulario inyectado únicamente en páginas que contienen el shortcode `[wppw]`.
+* Freemius integration for licence management and premium version.
+* New panel in Settings → WebPagesPassworded with free and premium sections.
+* Premium: customisable button text from the settings panel.
+* Premium: customisable error messages (wrong password and lockout).
+* Premium: configurable form design (input background, text and border colours; button colour, size and font).
+* Premium: customisable button icon, selected from a Font Awesome icon grid.
+* Premium: configurable spacing between the password field and the button.
+* Code refactored into separate classes.
+* Button changed from `<input type="submit">` to `<button type="submit">` to allow HTML content.
+* CSS injected only on pages that contain the `[wppw]` shortcode.
 
 = 3.1.0 =
-* Añadida protección contra fuerza bruta: bloqueo de 15 minutos tras 5 intentos fallidos por IP.
-* Cookie de sesión establecida con flags `HttpOnly` y `SameSite=Strict`.
-* Añadida guarda de acceso directo al archivo (`defined('ABSPATH') || exit`).
-* Eliminada comparación `CheckPassword` incorrecta en el procesamiento del formulario.
-* Versión bump a 3.1.0.
+* Added brute-force protection: 15-minute lockout after 5 failed attempts per IP.
+* Session cookie set with `HttpOnly` and `SameSite=Strict` flags.
+* Added direct file access guard.
+* Fixed incorrect password comparison in form processing.
 
 = 3.0.0 =
-* Refactorización completa para compatibilidad con PHP 7.4+ y WordPress 5.0+.
-* Eliminado el uso de `extract()`.
-* Eliminados los bloques de compatibilidad con versiones de WordPress anteriores a 3.6.
-* Añadida visibilidad explícita a todos los métodos de la clase.
-* Añadidos type hints de retorno en los métodos principales.
-* Saneamiento mejorado de los datos recibidos por POST.
-* Nuevos nombres de shortcode y campos de formulario con prefijo `wppw`.
-
-= 3.1.0 =
-Actualización de seguridad recomendada. Añade protección contra fuerza bruta y mejora los flags de la cookie de sesión.
-
-= 3.0.0 =
-El shortcode ha cambiado de `[smartpwpages]` a `[wppw]`. Si actualizas desde una versión anterior, sustituye el shortcode en todas las páginas donde esté insertado.
+* Full refactor for PHP 7.4+ and WordPress 5.0+ compatibility.
+* Removed use of `extract()`.
+* Added explicit visibility to all class methods.
+* Added return type hints to main methods.
+* Improved sanitisation of POST data.
+* New shortcode and form field names with `wppw` prefix.

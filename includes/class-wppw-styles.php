@@ -11,17 +11,19 @@ class WebPagesPW_Styles {
 	 * every singular page to avoid false negatives with page builders.
 	 */
 	public function enqueue_frontend_assets(): void {
-		if ( ! wppw_is_premium() || ! is_singular() ) {
+		if ( ! is_singular() ) {
 			return;
 		}
-		$s = wppw_get_settings();
-		if ( ! empty( $s['btn_icon_fa'] ) ) {
-			wp_enqueue_style(
-				'wppw-font-awesome',
-				WPPW_PLUGIN_URL . 'assets/vendor/font-awesome/css/all.min.css',
-				[],
-				'6.5.1'
-			);
+		if ( web_fs() && web_fs()->can_use_premium_code__premium_only() ) {
+			$s = wppw_get_settings();
+			if ( ! empty( $s['btn_icon_fa'] ) ) {
+				wp_enqueue_style(
+					'wppw-font-awesome',
+					WPPW_PLUGIN_URL . 'assets/vendor/font-awesome/css/all.min.css',
+					[],
+					'6.5.1'
+				);
+			}
 		}
 	}
 
@@ -31,17 +33,16 @@ class WebPagesPW_Styles {
 	 * page builders that store content outside post_content.
 	 */
 	public function output_form_styles(): void {
-		if ( ! wppw_is_premium() || ! is_singular() ) {
+		if ( ! is_singular() ) {
 			return;
 		}
-
-		$css = $this->build_css( wppw_get_settings() );
-
-		if ( empty( $css ) ) {
-			return;
+		if ( web_fs() && web_fs()->can_use_premium_code__premium_only() ) {
+			$css = $this->build_css( wppw_get_settings() );
+			if ( ! empty( $css ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS is pre-sanitized: colors via sanitize_hex_color(), sizes via absint(), class name via sanitize_text_field().
+			echo "<style id=\"wppw-form-styles\">\n{$css}\n</style>\n";
+			}
 		}
-
-		echo "<style id=\"wppw-form-styles\">\n{$css}\n</style>\n";
 	}
 
 	private function build_css( array $s ): string {
