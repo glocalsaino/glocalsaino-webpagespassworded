@@ -54,6 +54,13 @@ Ejemplo con parámetros:
 * PHP 7.4 o superior.
 * Las páginas hijo deben estar publicadas y tener contraseña configurada desde el editor de WordPress.
 
+== Screenshots ==
+
+1. Formulario de contraseña en el front-end, con icono y estilos personalizados mediante la versión premium.
+2. Panel de ajustes: sección de ajustes generales (texto del botón y referencia del shortcode) y sección de mensajes de error personalizables (premium).
+3. Panel de ajustes: sección de diseño del formulario con selector de colores, tamaños y cuadrícula de iconos de Font Awesome (premium).
+4. Panel de ajustes: sección de enlaces mágicos con formulario de creación y tabla de enlaces existentes con estado y acciones (premium).
+
 == Installation ==
 
 1. Sube la carpeta `wp-webpagespassworded` a `/wp-content/plugins/`.
