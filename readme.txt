@@ -3,7 +3,7 @@ Contributors: rafamm-glocalsaino
 Tags: password, protected pages, child pages, access control, shortcode
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 4.2.0
+Stable tag: 4.3.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -105,8 +105,8 @@ WebPagesPassworded no recopila, almacena ni transmite ningún dato personal.
 
 == Upgrade Notice ==
 
-= 4.2.0 =
-Nueva funcionalidad premium: login links para autenticar usuarios de WordPress sin contraseña. No requiere ninguna acción de migración.
+= 4.3.0 =
+La función login links se ha movido al plugin independiente WP Login Links. No requiere ninguna acción de migración en WebPagesPassworded.
 
 = 4.1.0 =
 Nueva funcionalidad premium: enlaces mágicos para dar acceso directo sin contraseña. No requiere ninguna acción de migración.
@@ -115,6 +115,9 @@ Nueva funcionalidad premium: enlaces mágicos para dar acceso directo sin contra
 Versión mayor con integración Freemius y funcionalidades premium. Compatible con versiones anteriores: el shortcode `[wppw]` sigue funcionando igual.
 
 == Changelog ==
+
+= 4.3.0 =
+* La funcionalidad de login links se ha extraído al plugin independiente WP Login Links.
 
 = 4.2.0 =
 * Nueva funcionalidad premium: login links. Genera enlaces firmados que autentican a un usuario de WordPress directamente, sin necesidad de introducir contraseña.
