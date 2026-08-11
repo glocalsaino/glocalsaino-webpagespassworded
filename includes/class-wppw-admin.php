@@ -410,6 +410,15 @@ class WebPagesPW_Admin {
 							</select>
 						</td>
 					</tr>
+					<tr>
+						<th scope="row"><label for="wppw_magic_fallback"><?php esc_html_e( 'URL si el enlace ya no funciona', 'wppw' ); ?></label></th>
+						<td>
+							<input type="url" id="wppw_magic_fallback" name="fallback_url" class="regular-text"
+								placeholder="https://ejemplo.com/acceso-caducado"
+								<?php disabled( ! $is_premium ); ?> />
+							<p class="description"><?php esc_html_e( 'Opcional. Si el enlace está caducado o agotado, el visitante será redirigido a esta URL en lugar de ver un error.', 'wppw' ); ?></p>
+						</td>
+					</tr>
 				</table>
 				<?php if ( $is_premium ) : ?>
 					<?php submit_button( __( 'Generar enlace', 'wppw' ) ); ?>
@@ -443,7 +452,12 @@ class WebPagesPW_Admin {
 							?>
 							<tr>
 								<td><?php echo esc_html( $page_title ); ?></td>
-								<td><?php echo esc_html( $link['label'] ? $link['label'] : '—' ); ?></td>
+								<td>
+								<?php echo esc_html( $link['label'] ?: '—' ); ?>
+								<?php if ( ! empty( $link['fallback_url'] ) ) : ?>
+									<br><small class="description"><?php esc_html_e( 'Fallback:', 'wppw' ); ?> <a href="<?php echo esc_url( $link['fallback_url'] ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $link['fallback_url'] ); ?></a></small>
+								<?php endif; ?>
+							</td>
 								<td>
 									<input type="text" readonly class="wppw-magic-url-field" value="<?php echo esc_url( $link_url ); ?>" onclick="this.select();" />
 									<button type="button" class="button wppw-copy-link" data-url="<?php echo esc_url( $link_url ); ?>"><?php esc_html_e( 'Copiar', 'wppw' ); ?></button>

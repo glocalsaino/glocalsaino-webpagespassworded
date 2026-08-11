@@ -30,6 +30,10 @@ class WebPagesPW_MagicLinks {
 		$link = $links[ $token ];
 
 		if ( $this->is_expired( $link ) || $this->is_exhausted( $link ) ) {
+			if ( ! empty( $link['fallback_url'] ) ) {
+				wp_safe_redirect( $link['fallback_url'] );
+				exit;
+			}
 			return;
 		}
 
@@ -95,20 +99,22 @@ class WebPagesPW_MagicLinks {
 			exit;
 		}
 
-		$expires_in = absint( $_POST['expires_in'] ?? 0 );
-		$max_uses   = absint( $_POST['max_uses'] ?? 0 );
-		$label      = sanitize_text_field( $_POST['label'] ?? '' );
+		$expires_in   = absint( $_POST['expires_in'] ?? 0 );
+		$max_uses     = absint( $_POST['max_uses'] ?? 0 );
+		$label        = sanitize_text_field( $_POST['label'] ?? '' );
+		$fallback_url = esc_url_raw( $_POST['fallback_url'] ?? '' );
 
 		$token = bin2hex( random_bytes( 32 ) );
 		$links = $this->get_links();
 
 		$links[ $token ] = [
-			'page_id'  => $page_id,
-			'label'    => $label,
-			'created'  => time(),
-			'expires'  => $expires_in ? time() + $expires_in : 0,
-			'max_uses' => $max_uses,
-			'uses'     => 0,
+			'page_id'      => $page_id,
+			'label'        => $label,
+			'fallback_url' => $fallback_url,
+			'created'      => time(),
+			'expires'      => $expires_in ? time() + $expires_in : 0,
+			'max_uses'     => $max_uses,
+			'uses'         => 0,
 		];
 
 		update_option( self::OPTION_KEY, $links );
