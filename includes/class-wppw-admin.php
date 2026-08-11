@@ -103,15 +103,6 @@ class WebPagesPW_Admin {
 		<div class="wrap wppw-settings-wrap">
 			<h1><?php esc_html_e( 'WebPagesPassworded', 'wppw' ); ?></h1>
 
-			<?php if ( ! $is_premium ) : ?>
-				<div class="notice notice-info wppw-notice-test">
-					<p>
-						<?php esc_html_e( 'Para probar las funciones premium localmente, añade esta línea a tu wp-config.php:', 'wppw' ); ?>
-						<code>define( 'WPPW_FORCE_PREMIUM', true );</code>
-					</p>
-				</div>
-			<?php endif; ?>
-
 			<!-- ══════════════════════════════════════
 			     SECCIÓN 1 · Ajustes generales (free)
 			     ══════════════════════════════════════ -->
