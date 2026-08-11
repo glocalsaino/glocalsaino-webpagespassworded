@@ -18,7 +18,7 @@ class WebPagesPW_Styles {
 		if ( ! empty( $s['btn_icon_fa'] ) ) {
 			wp_enqueue_style(
 				'wppw-font-awesome',
-				'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
+				WPPW_PLUGIN_URL . 'assets/vendor/font-awesome/css/all.min.css',
 				[],
 				'6.5.1'
 			);

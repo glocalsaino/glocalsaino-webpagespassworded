@@ -70,7 +70,7 @@ class WebPagesPW_Admin {
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_style(
 			'wppw-font-awesome',
-			'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
+			WPPW_PLUGIN_URL . 'assets/vendor/font-awesome/css/all.min.css',
 			[],
 			'6.5.1'
 		);
