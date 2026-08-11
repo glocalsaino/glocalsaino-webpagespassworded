@@ -1,67 +1,69 @@
 <?php
-/**
- * Freemius SDK initialization.
- *
- * Pasos para activar Freemius:
- * 1. Crea una cuenta en https://freemius.com y añade un nuevo plugin.
- * 2. En el dashboard copia el Plugin ID (número) y la Public Key (pk_…).
- * 3. Sustituye los valores marcados con TODO más abajo.
- * 4. Descarga el SDK desde el dashboard, descomprímelo y coloca la carpeta
- *    resultante en /freemius/ dentro del directorio del plugin.
- */
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! function_exists( 'wppw_fs' ) ) {
+if ( ! function_exists( 'web_fs' ) ) {
 
-	function wppw_fs(): ?object {
-		global $wppw_fs;
+	function web_fs() {
+		global $web_fs;
 
-		if ( ! isset( $wppw_fs ) ) {
-			$sdk = WPPW_PLUGIN_DIR . 'freemius/start.php';
+		if ( ! isset( $web_fs ) ) {
+			$sdk = WPPW_PLUGIN_DIR . 'vendor/freemius/start.php';
 
 			if ( ! file_exists( $sdk ) ) {
-				$wppw_fs = null;
+				$web_fs = null;
 				return null;
 			}
 
 			require_once $sdk;
 
-			$wppw_fs = fs_dynamic_init( [
-				'id'             => '0000',                            // TODO: Plugin ID de Freemius
-				'slug'           => 'webpagespassworded',
-				'type'           => 'plugin',
-				'public_key'     => 'pk_00000000000000000000000000000', // TODO: Public Key de Freemius
-				'is_premium'     => false,
-				'has_addons'     => false,
-				'has_paid_plans' => true,
-				'menu'           => [
-					'slug'    => 'wppw-settings',
-					'contact' => false,
-					'support' => false,
-					'parent'  => [
+			$web_fs = fs_dynamic_init( array(
+				'id'                  => '36911',
+				'slug'                => 'webpagespassworded',
+				'type'                => 'plugin',
+				'public_key'          => 'pk_114bfda53c60f4de7cafd3382ffe7',
+				'is_premium'          => true,
+				'premium_suffix'      => 'Premium',
+				'has_premium_version' => true,
+				'has_addons'          => false,
+				'has_paid_plans'      => true,
+				'is_org_compliant'    => true,
+				// Remove this line from the WP.org free version before submitting.
+				'wp_org_gatekeeper'   => 'OA7#BoRiBNqdf52FvzEf!!074aRLPs8fspif$7K1#4u4Csys1fQlCecVcUTOs2mcpeVHi#C2j9d09fOTvbC0HloPT7fFee5WdS3G',
+				'trial'               => array(
+					'days'               => 7,
+					'is_require_payment' => false,
+				),
+				'menu'                => array(
+					'slug'   => 'wppw-settings',
+					'parent' => array(
 						'slug' => 'options-general.php',
-					],
-				],
-			] );
+					),
+				),
+			) );
 		}
 
-		return $wppw_fs;
+		return $web_fs;
 	}
 
-	wppw_fs();
-	do_action( 'wppw_fs_loaded' );
+	web_fs();
+	do_action( 'web_fs_loaded' );
+}
+
+// Internal aliases used throughout the plugin.
+
+function wppw_fs(): ?object {
+	return web_fs();
 }
 
 function wppw_is_premium(): bool {
-	$fs = wppw_fs();
+	$fs = web_fs();
 	return $fs instanceof Freemius && $fs->can_use_premium_code();
 }
 
 function wppw_get_upgrade_url(): string {
-	$fs = wppw_fs();
+	$fs = web_fs();
 	if ( $fs instanceof Freemius ) {
 		return (string) $fs->get_upgrade_url();
 	}
