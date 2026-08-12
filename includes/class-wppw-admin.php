@@ -66,7 +66,7 @@ class WebPagesPW_Admin {
 	}
 
 	public function enqueue_admin_assets( string $hook ): void {
-		if ( 'settings_page_wppw-settings' !== $hook ) {
+		if ( 'toplevel_page_wppw-settings' !== $hook ) {
 			return;
 		}
 		wp_enqueue_style( 'wp-color-picker' );
