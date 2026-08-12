@@ -3,7 +3,7 @@ Contributors: rafamm-glocalsaino
 Tags: password, protected pages, child pages, access control, shortcode
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 4.3.0
+Stable tag: 4.3.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -112,7 +112,7 @@ WebPagesPassworded does not collect, store, or transmit any personal data.
 
 == Upgrade Notice ==
 
-= 4.3.0 =
+= 4.3.1 =
 The login links feature has been moved to the standalone WP Login Links plugin. No migration needed in WebPagesPassworded.
 
 = 4.1.0 =
@@ -129,7 +129,7 @@ The shortcode has changed from `[smartpwpages]` to `[wppw]`. Replace the shortco
 
 == Changelog ==
 
-= 4.3.0 =
+= 4.3.1 =
 * The login links feature has been extracted to the standalone WP Login Links plugin.
 
 = 4.2.0 =

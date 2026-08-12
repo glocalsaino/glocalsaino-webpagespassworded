@@ -3,7 +3,7 @@
  * Plugin Name:       WebPagesPassworded
  * Plugin URI:        https://glocalsaino.com
  * Description:       Página de acceso centralizada para páginas hijo protegidas con contraseña. El shortcode [wppw] muestra un formulario; al introducir la contraseña correcta, el visitante es redirigido a la página hijo que la tenga asignada.
- * Version:           4.3.0
+ * Version:           4.3.1
  * Requires at least: 5.0
  * Requires PHP:      7.4
  * Author:            RafaMM-GlocalSaino
@@ -24,7 +24,7 @@ if ( function_exists( 'web_fs' ) ) {
 	web_fs()->set_basename( true, __FILE__ );
 } else {
 
-	define( 'WPPW_VERSION',         '4.3.0' );
+	define( 'WPPW_VERSION',         '4.3.1' );
 	define( 'WPPW_PLUGIN_DIR',      plugin_dir_path( __FILE__ ) );
 	define( 'WPPW_PLUGIN_URL',      plugin_dir_url( __FILE__ ) );
 	define( 'SECONDS_TO_STORE_PW',  864000 ); // 10 days
