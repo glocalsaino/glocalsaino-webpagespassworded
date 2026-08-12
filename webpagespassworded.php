@@ -6,7 +6,7 @@
  * Version:           4.3.1
  * Requires at least: 5.0
  * Requires PHP:      7.4
- * Author:            RafaMM-GlocalSaino
+ * Author:            Glocal Saino
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       webpagespassworded

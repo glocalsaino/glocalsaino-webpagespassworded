@@ -1,5 +1,5 @@
 === WebPagesPassworded ===
-Contributors: rafamm-glocalsaino
+Contributors: glocalsaino
 Tags: password, protected pages, child pages, access control, shortcode
 Requires at least: 5.0
 Tested up to: 7.0
