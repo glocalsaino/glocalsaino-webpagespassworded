@@ -11,12 +11,14 @@ class WebPagesPW_Admin {
 	private const OPT_DESIGN   = 'wppw_design';
 
 	public function register_menu(): void {
-		add_options_page(
+		add_menu_page(
 			__( 'WebPagesPassworded', 'webpagespassworded' ),
 			__( 'WebPagesPassworded', 'webpagespassworded' ),
 			'manage_options',
 			'wppw-settings',
-			[ $this, 'render_settings_page' ]
+			[ $this, 'render_settings_page' ],
+			'dashicons-lock',
+			80
 		);
 	}
 

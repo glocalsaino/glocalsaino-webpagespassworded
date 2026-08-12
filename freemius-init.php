@@ -37,10 +37,7 @@ if ( ! function_exists( 'web_fs' ) ) {
 					'is_require_payment' => false,
 				),
 				'menu'                => array(
-					'slug'   => 'wppw-settings',
-					'parent' => array(
-						'slug' => 'options-general.php',
-					),
+					'slug' => 'wppw-settings',
 				),
 			) );
 		}
