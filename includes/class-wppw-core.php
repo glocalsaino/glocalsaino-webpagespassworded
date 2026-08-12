@@ -31,7 +31,7 @@ class WebPagesPW_Core {
 		$msg_wrong_pw = esc_html__( 'La contraseña es incorrecta.', 'webpagespassworded' );
 		$msg_lockout  = esc_html__( 'Demasiados intentos fallidos. Espera 15 minutos antes de intentarlo de nuevo.', 'webpagespassworded' );
 
-		if ( web_fs() && web_fs()->can_use_premium_code__premium_only() ) {
+		if ( web_fs() && web_fs()->is__premium_only() ) {
 			if ( ! empty( $settings['msg_wrong_pw'] ) ) {
 				$msg_wrong_pw = esc_html( $settings['msg_wrong_pw'] );
 			}
@@ -42,7 +42,7 @@ class WebPagesPW_Core {
 
 		// Premium: Font Awesome icon with configurable position.
 		$button_inner = $label;
-		if ( web_fs() && web_fs()->can_use_premium_code__premium_only() ) {
+		if ( web_fs() && web_fs()->is__premium_only() ) {
 			if ( ! empty( $settings['btn_icon_fa'] ) ) {
 				$icon_class = esc_attr( $settings['btn_icon_fa'] );
 				$icon_pos   = $settings['btn_icon_position'] ?? 'left';

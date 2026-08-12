@@ -14,7 +14,7 @@ class WebPagesPW_Styles {
 		if ( ! is_singular() ) {
 			return;
 		}
-		if ( web_fs() && web_fs()->can_use_premium_code__premium_only() ) {
+		if ( web_fs() && web_fs()->is__premium_only() ) {
 			$s = wppw_get_settings();
 			if ( ! empty( $s['btn_icon_fa'] ) ) {
 				wp_enqueue_style(
@@ -36,7 +36,7 @@ class WebPagesPW_Styles {
 		if ( ! is_singular() ) {
 			return;
 		}
-		if ( web_fs() && web_fs()->can_use_premium_code__premium_only() ) {
+		if ( web_fs() && web_fs()->is__premium_only() ) {
 			$css = $this->build_css( wppw_get_settings() );
 			if ( ! empty( $css ) ) {
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS is pre-sanitized: colors via sanitize_hex_color(), sizes via absint(), class name via sanitize_text_field().

@@ -31,7 +31,7 @@ class WebPagesPW_Admin {
 	}
 
 	public function sanitize_messages( $input ): array {
-		if ( web_fs() && web_fs()->can_use_premium_code__premium_only() ) {
+		if ( web_fs() && web_fs()->is__premium_only() ) {
 			return [
 				'msg_wrong_pw' => sanitize_text_field( $input['msg_wrong_pw'] ?? '' ),
 				'msg_lockout'  => sanitize_text_field( $input['msg_lockout']  ?? '' ),
@@ -41,7 +41,7 @@ class WebPagesPW_Admin {
 	}
 
 	public function sanitize_design( $input ): array {
-		if ( web_fs() && web_fs()->can_use_premium_code__premium_only() ) {
+		if ( web_fs() && web_fs()->is__premium_only() ) {
 			$clean = [];
 
 			foreach ( [ 'input_bg', 'input_text', 'input_border', 'btn_bg', 'btn_text' ] as $key ) {

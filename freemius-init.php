@@ -10,7 +10,7 @@ if ( ! function_exists( 'web_fs' ) ) {
 		global $web_fs;
 
 		if ( ! isset( $web_fs ) ) {
-			$sdk = WPPW_PLUGIN_DIR . 'vendor/freemius/start.php';
+			$sdk = WPPW_PLUGIN_DIR . 'vendor/autoload.php';
 
 			if ( ! file_exists( $sdk ) ) {
 				$web_fs = null;

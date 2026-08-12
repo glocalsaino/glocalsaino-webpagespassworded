@@ -21,7 +21,7 @@ class WebPagesPW_MagicLinks {
 			return;
 		}
 
-		if ( web_fs() && web_fs()->can_use_premium_code__premium_only() ) {
+		if ( web_fs() && web_fs()->is__premium_only() ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- token itself is the cryptographic verification.
 			$token = sanitize_text_field( wp_unslash( $_GET['wppw_magic'] ) );
 			$links = $this->get_links();
@@ -91,7 +91,7 @@ class WebPagesPW_MagicLinks {
 		}
 		check_admin_referer( 'wppw_magic_create' );
 
-		if ( web_fs() && web_fs()->can_use_premium_code__premium_only() ) {
+		if ( web_fs() && web_fs()->is__premium_only() ) {
 			$page_id = absint( $_POST['page_id'] ?? 0 );
 			$page    = get_post( $page_id );
 
