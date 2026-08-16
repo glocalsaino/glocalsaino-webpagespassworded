@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WebPagesPW_Admin {
+class GlocalSaino_Wppw_Admin {
 
 	private const OPT_GENERAL  = 'glocalsaino_wppw_general';
 	private const OPT_MESSAGES = 'glocalsaino_wppw_messages';
@@ -65,21 +65,21 @@ class WebPagesPW_Admin {
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_style(
 			'glocalsaino-wppw-font-awesome',
-			WPPW_PLUGIN_URL . 'assets/vendor/font-awesome/css/all.min.css',
+			GLOCALSAINO_WPPW_URL . 'assets/vendor/font-awesome/css/all.min.css',
 			array(),
 			'6.5.1'
 		);
 		wp_enqueue_style(
 			'glocalsaino-wppw-admin',
-			WPPW_PLUGIN_URL . 'assets/css/admin.css',
+			GLOCALSAINO_WPPW_URL . 'assets/css/admin.css',
 			array( 'wp-color-picker', 'glocalsaino-wppw-font-awesome' ),
-			WPPW_VERSION
+			GLOCALSAINO_WPPW_VERSION
 		);
 		wp_enqueue_script(
 			'glocalsaino-wppw-admin',
-			WPPW_PLUGIN_URL . 'assets/js/admin.js',
+			GLOCALSAINO_WPPW_URL . 'assets/js/admin.js',
 			array( 'wp-color-picker', 'jquery' ),
-			WPPW_VERSION,
+			GLOCALSAINO_WPPW_VERSION,
 			true
 		);
 	}

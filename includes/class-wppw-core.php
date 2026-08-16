@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WebPagesPW_Core {
+class GlocalSaino_Wppw_Core {
 
 	public function wppw_shortcode( $atts ): string {
 		global $post;
@@ -65,8 +65,8 @@ class WebPagesPW_Core {
 		}
 
 		$result .= "\t<input class=\"requiredField\" type=\"password\" name=\"glocalsaino_wppw_password\" id=\"glocalsaino-wppw-password\" value=\"\" />\n";
-		$result .= "\t<input type=\"hidden\" name=\"glocalsaino_wppw_parent\" value=\"{$parent}\" />\n";
-		$result .= "\t<input type=\"hidden\" name=\"glocalsaino_wppw_nonce\" value=\"{$nonce}\" />\n";
+		$result .= "\t<input type=\"hidden\" name=\"glocalsaino_wppw_parent\" value=\"" . esc_attr( (string) $parent ) . "\" />\n";
+		$result .= "\t<input type=\"hidden\" name=\"glocalsaino_wppw_nonce\" value=\"" . esc_attr( $nonce ) . "\" />\n";
 		$result .= "\t<button type=\"submit\">{$button_inner}</button>\n";
 		$result .= "</form>\n";
 		$result .= "</div>\n";
@@ -90,10 +90,10 @@ class WebPagesPW_Core {
 	private function record_failure(): void {
 		$key      = $this->ip_transient_key( 'glocalsaino_wppw_fail_' );
 		$attempts = (int) get_transient( $key ) + 1;
-		set_transient( $key, $attempts, WPPW_LOCKOUT_SECONDS );
+		set_transient( $key, $attempts, GLOCALSAINO_WPPW_LOCKOUT_SECONDS );
 
-		if ( $attempts >= WPPW_MAX_ATTEMPTS ) {
-			set_transient( $this->ip_transient_key( 'glocalsaino_wppw_lock_' ), 1, WPPW_LOCKOUT_SECONDS );
+		if ( $attempts >= GLOCALSAINO_WPPW_MAX_ATTEMPTS ) {
+			set_transient( $this->ip_transient_key( 'glocalsaino_wppw_lock_' ), 1, GLOCALSAINO_WPPW_LOCKOUT_SECONDS );
 		}
 	}
 
@@ -119,7 +119,7 @@ class WebPagesPW_Core {
 			'wp-postpass_' . COOKIEHASH,
 			$cookiePW,
 			array(
-				'expires'  => time() + WPPW_COOKIE_SECONDS,
+				'expires'  => time() + GLOCALSAINO_WPPW_COOKIE_SECONDS,
 				'path'     => COOKIEPATH,
 				'domain'   => COOKIE_DOMAIN,
 				'secure'   => $secure,

@@ -10,7 +10,7 @@ if ( ! function_exists( 'glocalsaino_wppw_fs' ) ) {
 		global $glocalsaino_wppw_fs;
 
 		if ( ! isset( $glocalsaino_wppw_fs ) ) {
-			$sdk = WPPW_PLUGIN_DIR . 'vendor/autoload.php';
+			$sdk = GLOCALSAINO_WPPW_DIR . 'vendor/autoload.php';
 
 			if ( ! file_exists( $sdk ) ) {
 				$glocalsaino_wppw_fs = null;

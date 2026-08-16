@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WebPagesPW_Styles {
+class GlocalSaino_Wppw_Styles {
 
 	public function enqueue_frontend_assets(): void {
 		if ( ! is_singular() ) {
@@ -16,15 +16,15 @@ class WebPagesPW_Styles {
 		// to attach dynamic inline styles via wp_add_inline_style().
 		wp_enqueue_style(
 			'glocalsaino-wppw-frontend',
-			WPPW_PLUGIN_URL . 'assets/css/frontend.css',
+			GLOCALSAINO_WPPW_URL . 'assets/css/frontend.css',
 			array(),
-			WPPW_VERSION
+			GLOCALSAINO_WPPW_VERSION
 		);
 
 		if ( ! empty( $s['btn_icon_fa'] ) ) {
 			wp_enqueue_style(
 				'glocalsaino-wppw-font-awesome',
-				WPPW_PLUGIN_URL . 'assets/vendor/font-awesome/css/all.min.css',
+				GLOCALSAINO_WPPW_URL . 'assets/vendor/font-awesome/css/all.min.css',
 				array(),
 				'6.5.1'
 			);
