@@ -33,7 +33,8 @@ if ( ! function_exists( 'glocalsaino_wppw_fs' ) ) {
 				'has_paid_plans'      => false,
 				'is_org_compliant'    => true,
 				'menu'                => array(
-					'slug' => 'glocalsaino-wppw-settings',
+					'slug'    => 'glocalsaino-wppw-settings',
+					'pricing' => false,
 				),
 			) );
 		}
