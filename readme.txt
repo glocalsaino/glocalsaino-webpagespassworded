@@ -3,7 +3,7 @@ Contributors: glocalsaino, rafammoo
 Tags: password, protected pages, child pages, access control, shortcode
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 4.4.1
+Stable tag: 4.4.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -117,10 +117,16 @@ GlocalSaino WebPagesPassworded does not collect, store, or transmit any personal
 
 == Upgrade Notice ==
 
-= 4.4.1 =
-Plugin renamed to GlocalSaino WebPagesPassworded. New slug: glocalsaino-webpagespassworded. Shortcode updated to [glocalsaino_wppw]. All features are now included free — no license required.
+= 4.4.2 =
+Fix: global variable names now carry the glocalsaino_wppw_ prefix (PHPCS PrefixAllGlobals compliance).
 
 == Changelog ==
+
+= 4.4.3 =
+* Tweak: rename first submenu item from "WebPagesPassworded" to "Configuración" so it fits in the sidebar.
+
+= 4.4.2 =
+* Fix: rename $wppw_core, $wppw_admin, $wppw_styles to use the glocalsaino_wppw_ prefix in the main plugin file (PHPCS PrefixAllGlobals).
 
 = 4.4.1 =
 * Plugin renamed to GlocalSaino WebPagesPassworded (slug: glocalsaino-webpagespassworded).

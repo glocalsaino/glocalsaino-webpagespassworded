@@ -19,6 +19,15 @@ class GlocalSaino_Wppw_Admin {
 			'dashicons-lock',
 			80
 		);
+
+		add_submenu_page(
+			'glocalsaino-wppw-settings',
+			__( 'GlocalSaino WebPagesPassworded', 'glocalsaino-webpagespassworded' ),
+			__( 'Configuración', 'glocalsaino-webpagespassworded' ),
+			'manage_options',
+			'glocalsaino-wppw-settings',
+			array( $this, 'render_settings_page' )
+		);
 	}
 
 	public function register_settings(): void {
