@@ -3,7 +3,7 @@
  * Plugin Name:       GlocalSaino WebPagesPassworded
  * Plugin URI:        https://glocalsaino.com
  * Description:       Single access page for groups of password-protected child pages. Place [glocalsaino_wppw] on a parent page and visitors are redirected to the matching child page after entering the correct password.
- * Version:           4.4.0
+ * Version:           4.4.1
  * Requires at least: 5.0
  * Requires PHP:      7.4
  * Author:            Glocal Saino
@@ -24,7 +24,7 @@ if ( function_exists( 'glocalsaino_wppw_fs' ) ) {
 	glocalsaino_wppw_fs()->set_basename( true, __FILE__ );
 } else {
 
-	define( 'GLOCALSAINO_WPPW_VERSION',        '4.4.0' );
+	define( 'GLOCALSAINO_WPPW_VERSION',        '4.4.1' );
 	define( 'GLOCALSAINO_WPPW_DIR',     plugin_dir_path( __FILE__ ) );
 	define( 'GLOCALSAINO_WPPW_URL',     plugin_dir_url( __FILE__ ) );
 	define( 'GLOCALSAINO_WPPW_COOKIE_SECONDS', 864000 );
