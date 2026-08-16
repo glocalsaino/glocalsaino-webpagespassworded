@@ -1,0 +1,4 @@
+/* GlocalSaino WebPagesPassworded – frontend base styles */
+.glocalsaino-wppw-form-wrapper { margin: 1em 0; }
+.glocalsaino-wppw-error { color: #cc0000; margin-bottom: .5em; }
+.glocalsaino-wppw-btn-label { display: inline; }

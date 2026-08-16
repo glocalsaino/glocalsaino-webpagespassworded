@@ -5,87 +5,80 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WebPagesPW_Admin {
 
-	// Three independent WP options — one per section.
-	private const OPT_GENERAL  = 'wppw_general';
-	private const OPT_MESSAGES = 'wppw_messages';
-	private const OPT_DESIGN   = 'wppw_design';
+	private const OPT_GENERAL  = 'glocalsaino_wppw_general';
+	private const OPT_MESSAGES = 'glocalsaino_wppw_messages';
+	private const OPT_DESIGN   = 'glocalsaino_wppw_design';
 
 	public function register_menu(): void {
 		add_menu_page(
-			__( 'WebPagesPassworded', 'webpagespassworded' ),
-			__( 'WebPagesPassworded', 'webpagespassworded' ),
+			__( 'GlocalSaino WebPagesPassworded', 'glocalsaino-webpagespassworded' ),
+			__( 'WebPagesPassworded', 'glocalsaino-webpagespassworded' ),
 			'manage_options',
-			'wppw-settings',
-			[ $this, 'render_settings_page' ],
+			'glocalsaino-wppw-settings',
+			array( $this, 'render_settings_page' ),
 			'dashicons-lock',
 			80
 		);
 	}
 
 	public function register_settings(): void {
-		register_setting( 'wppw_general_group',  self::OPT_GENERAL,  [ 'sanitize_callback' => [ $this, 'sanitize_general'  ] ] );
-		register_setting( 'wppw_messages_group', self::OPT_MESSAGES, [ 'sanitize_callback' => [ $this, 'sanitize_messages' ] ] );
-		register_setting( 'wppw_design_group',   self::OPT_DESIGN,   [ 'sanitize_callback' => [ $this, 'sanitize_design'   ] ] );
+		register_setting( 'glocalsaino_wppw_general_group',  self::OPT_GENERAL,  array( 'sanitize_callback' => array( $this, 'sanitize_general'  ) ) );
+		register_setting( 'glocalsaino_wppw_messages_group', self::OPT_MESSAGES, array( 'sanitize_callback' => array( $this, 'sanitize_messages' ) ) );
+		register_setting( 'glocalsaino_wppw_design_group',   self::OPT_DESIGN,   array( 'sanitize_callback' => array( $this, 'sanitize_design'   ) ) );
 	}
 
 	public function sanitize_general( $input ): array {
-		return [ 'button_label' => sanitize_text_field( $input['button_label'] ?? '' ) ];
+		return array( 'button_label' => sanitize_text_field( $input['button_label'] ?? '' ) );
 	}
 
 	public function sanitize_messages( $input ): array {
-		if ( web_fs() && web_fs()->is__premium_only() ) {
-			return [
-				'msg_wrong_pw' => sanitize_text_field( $input['msg_wrong_pw'] ?? '' ),
-				'msg_lockout'  => sanitize_text_field( $input['msg_lockout']  ?? '' ),
-			];
-		}
-		return (array) get_option( self::OPT_MESSAGES, [] );
+		return array(
+			'msg_wrong_pw' => sanitize_text_field( $input['msg_wrong_pw'] ?? '' ),
+			'msg_lockout'  => sanitize_text_field( $input['msg_lockout']  ?? '' ),
+		);
 	}
 
 	public function sanitize_design( $input ): array {
-		if ( web_fs() && web_fs()->is__premium_only() ) {
-			$clean = [];
+		$clean = array();
 
-			foreach ( [ 'input_bg', 'input_text', 'input_border', 'btn_bg', 'btn_text' ] as $key ) {
-				$clean[ $key ] = sanitize_hex_color( $input[ $key ] ?? '' ) ?? '';
-			}
-
-			$clean['input_size'] = absint( $input['input_size'] ?? 16 );
-			$clean['btn_size']   = absint( $input['btn_size']   ?? 16 );
-			$clean['field_gap']  = absint( $input['field_gap']  ?? 10 );
-
-			$clean['btn_icon_fa'] = sanitize_text_field( $input['btn_icon_fa'] ?? '' );
-
-			$allowed_pos                = [ 'left', 'right', 'top' ];
-			$pos                        = $input['btn_icon_position'] ?? 'left';
-			$clean['btn_icon_position'] = in_array( $pos, $allowed_pos, true ) ? $pos : 'left';
-
-			return $clean;
+		foreach ( array( 'input_bg', 'input_text', 'input_border', 'btn_bg', 'btn_text' ) as $key ) {
+			$clean[ $key ] = sanitize_hex_color( $input[ $key ] ?? '' ) ?? '';
 		}
-		return (array) get_option( self::OPT_DESIGN, [] );
+
+		$clean['input_size'] = absint( $input['input_size'] ?? 16 );
+		$clean['btn_size']   = absint( $input['btn_size']   ?? 16 );
+		$clean['field_gap']  = absint( $input['field_gap']  ?? 10 );
+
+		$clean['btn_icon_fa'] = sanitize_text_field( $input['btn_icon_fa'] ?? '' );
+
+		$allowed_pos                = array( 'left', 'right', 'top' );
+		$pos                        = $input['btn_icon_position'] ?? 'left';
+		$clean['btn_icon_position'] = in_array( $pos, $allowed_pos, true ) ? $pos : 'left';
+
+		return $clean;
 	}
 
 	public function enqueue_admin_assets( string $hook ): void {
-		if ( 'toplevel_page_wppw-settings' !== $hook ) {
+		if ( 'toplevel_page_glocalsaino-wppw-settings' !== $hook ) {
 			return;
 		}
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_style(
-			'wppw-font-awesome',
+			'glocalsaino-wppw-font-awesome',
 			WPPW_PLUGIN_URL . 'assets/vendor/font-awesome/css/all.min.css',
-			[],
+			array(),
 			'6.5.1'
 		);
 		wp_enqueue_style(
-			'wppw-admin',
+			'glocalsaino-wppw-admin',
 			WPPW_PLUGIN_URL . 'assets/css/admin.css',
-			[ 'wp-color-picker', 'wppw-font-awesome' ],
+			array( 'wp-color-picker', 'glocalsaino-wppw-font-awesome' ),
 			WPPW_VERSION
 		);
 		wp_enqueue_script(
-			'wppw-admin',
+			'glocalsaino-wppw-admin',
 			WPPW_PLUGIN_URL . 'assets/js/admin.js',
-			[ 'wp-color-picker', 'jquery' ],
+			array( 'wp-color-picker', 'jquery' ),
 			WPPW_VERSION,
 			true
 		);
@@ -96,166 +89,145 @@ class WebPagesPW_Admin {
 			return;
 		}
 
-		$g          = (array) get_option( self::OPT_GENERAL,  [] );
-		$m          = (array) get_option( self::OPT_MESSAGES, [] );
-		$d          = (array) get_option( self::OPT_DESIGN,   [] );
-		$is_premium = wppw_is_premium();
-		$locked     = $is_premium ? '' : ' wppw-locked';
+		$g = (array) get_option( self::OPT_GENERAL,  array() );
+		$m = (array) get_option( self::OPT_MESSAGES, array() );
+		$d = (array) get_option( self::OPT_DESIGN,   array() );
 		?>
 		<div class="wrap wppw-settings-wrap">
-			<h1><?php esc_html_e( 'WebPagesPassworded', 'webpagespassworded' ); ?></h1>
+			<h1><?php esc_html_e( 'GlocalSaino WebPagesPassworded', 'glocalsaino-webpagespassworded' ); ?></h1>
 
-			<!-- ══════════════════════════════════════
-			     SECCIÓN 1 · Ajustes generales (free)
-			     ══════════════════════════════════════ -->
+			<!-- ══ SECTION 1 · General settings ══ -->
 			<form method="post" action="options.php">
-				<?php settings_fields( 'wppw_general_group' ); ?>
+				<?php settings_fields( 'glocalsaino_wppw_general_group' ); ?>
 				<div class="wppw-section">
-					<h2><?php esc_html_e( 'Ajustes generales', 'webpagespassworded' ); ?></h2>
+					<h2><?php esc_html_e( 'General settings', 'glocalsaino-webpagespassworded' ); ?></h2>
 					<table class="form-table" role="presentation">
 						<tr>
 							<th scope="row">
-								<label for="wppw_button_label"><?php esc_html_e( 'Texto del botón', 'webpagespassworded' ); ?></label>
+								<label for="glocalsaino_wppw_button_label"><?php esc_html_e( 'Button label', 'glocalsaino-webpagespassworded' ); ?></label>
 							</th>
 							<td>
-								<input type="text" id="wppw_button_label"
+								<input type="text" id="glocalsaino_wppw_button_label"
 									name="<?php echo esc_attr( self::OPT_GENERAL ); ?>[button_label]"
 									value="<?php echo esc_attr( $g['button_label'] ?? '' ); ?>"
 									class="regular-text"
 									placeholder="Enter" />
-								<p class="description"><?php esc_html_e( 'Texto global del botón. El atributo label del shortcode siempre tiene prioridad.', 'webpagespassworded' ); ?></p>
+								<p class="description"><?php esc_html_e( 'Global button text. The shortcode label attribute always takes precedence.', 'glocalsaino-webpagespassworded' ); ?></p>
 							</td>
 						</tr>
 					</table>
-					<p><?php esc_html_e( 'Shortcode:', 'webpagespassworded' ); ?> <code>[wppw]</code> &nbsp;|&nbsp;
-					   <?php esc_html_e( 'Con parámetros:', 'webpagespassworded' ); ?> <code>[wppw label="Acceder" id="mi-formulario"]</code></p>
-					<?php submit_button( __( 'Guardar ajustes generales', 'webpagespassworded' ) ); ?>
+					<p><?php esc_html_e( 'Shortcode:', 'glocalsaino-webpagespassworded' ); ?> <code>[glocalsaino_wppw]</code> &nbsp;|&nbsp;
+					   <?php esc_html_e( 'With parameters:', 'glocalsaino-webpagespassworded' ); ?> <code>[glocalsaino_wppw label="Enter" id="my-form"]</code></p>
+					<?php submit_button( __( 'Save general settings', 'glocalsaino-webpagespassworded' ) ); ?>
 				</div>
 			</form>
 
-			<!-- ══════════════════════════════════════
-			     SECCIÓN 2 · Mensajes de error (premium)
-			     ══════════════════════════════════════ -->
+			<!-- ══ SECTION 2 · Error messages ══ -->
 			<form method="post" action="options.php">
-				<?php settings_fields( 'wppw_messages_group' ); ?>
-				<div class="wppw-section<?php echo esc_attr( $locked ); ?>">
-					<?php $this->premium_badge( $is_premium ); ?>
-					<h2><?php esc_html_e( 'Mensajes de error', 'webpagespassworded' ); ?></h2>
+				<?php settings_fields( 'glocalsaino_wppw_messages_group' ); ?>
+				<div class="wppw-section">
+					<h2><?php esc_html_e( 'Error messages', 'glocalsaino-webpagespassworded' ); ?></h2>
 					<table class="form-table" role="presentation">
 						<tr>
 							<th scope="row">
-								<label for="wppw_msg_wrong_pw"><?php esc_html_e( 'Contraseña incorrecta', 'webpagespassworded' ); ?></label>
+								<label for="glocalsaino_wppw_msg_wrong_pw"><?php esc_html_e( 'Wrong password', 'glocalsaino-webpagespassworded' ); ?></label>
 							</th>
 							<td>
-								<input type="text" id="wppw_msg_wrong_pw"
+								<input type="text" id="glocalsaino_wppw_msg_wrong_pw"
 									name="<?php echo esc_attr( self::OPT_MESSAGES ); ?>[msg_wrong_pw]"
 									value="<?php echo esc_attr( $m['msg_wrong_pw'] ?? '' ); ?>"
 									class="large-text"
-									placeholder="<?php esc_attr_e( 'La contraseña es incorrecta.', 'webpagespassworded' ); ?>"
-									<?php disabled( ! $is_premium ); ?> />
+									placeholder="<?php esc_attr_e( 'Incorrect password.', 'glocalsaino-webpagespassworded' ); ?>" />
 							</td>
 						</tr>
 						<tr>
 							<th scope="row">
-								<label for="wppw_msg_lockout"><?php esc_html_e( 'Demasiados intentos', 'webpagespassworded' ); ?></label>
+								<label for="glocalsaino_wppw_msg_lockout"><?php esc_html_e( 'Too many attempts', 'glocalsaino-webpagespassworded' ); ?></label>
 							</th>
 							<td>
-								<input type="text" id="wppw_msg_lockout"
+								<input type="text" id="glocalsaino_wppw_msg_lockout"
 									name="<?php echo esc_attr( self::OPT_MESSAGES ); ?>[msg_lockout]"
 									value="<?php echo esc_attr( $m['msg_lockout'] ?? '' ); ?>"
 									class="large-text"
-									placeholder="<?php esc_attr_e( 'Demasiados intentos fallidos. Espera 15 minutos antes de intentarlo de nuevo.', 'webpagespassworded' ); ?>"
-									<?php disabled( ! $is_premium ); ?> />
+									placeholder="<?php esc_attr_e( 'Too many failed attempts. Please wait 15 minutes before trying again.', 'glocalsaino-webpagespassworded' ); ?>" />
 							</td>
 						</tr>
 					</table>
-					<?php if ( $is_premium ) : ?>
-						<?php submit_button( __( 'Guardar mensajes', 'webpagespassworded' ) ); ?>
-					<?php else : ?>
-						<p><a href="<?php echo esc_url( wppw_get_upgrade_url() ); ?>" class="button wppw-upgrade-btn">&#11088; <?php esc_html_e( 'Actualizar a Premium', 'webpagespassworded' ); ?></a></p>
-					<?php endif; ?>
+					<?php submit_button( __( 'Save messages', 'glocalsaino-webpagespassworded' ) ); ?>
 				</div>
 			</form>
 
-			<!-- ══════════════════════════════════════
-			     SECCIÓN 3 · Diseño del formulario (premium)
-			     ══════════════════════════════════════ -->
+			<!-- ══ SECTION 3 · Form design ══ -->
 			<form method="post" action="options.php">
-				<?php settings_fields( 'wppw_design_group' ); ?>
-				<div class="wppw-section<?php echo esc_attr( $locked ); ?>">
-					<?php $this->premium_badge( $is_premium ); ?>
-					<h2><?php esc_html_e( 'Diseño del formulario', 'webpagespassworded' ); ?></h2>
+				<?php settings_fields( 'glocalsaino_wppw_design_group' ); ?>
+				<div class="wppw-section">
+					<h2><?php esc_html_e( 'Form design', 'glocalsaino-webpagespassworded' ); ?></h2>
 
-					<h3><?php esc_html_e( 'Campo de contraseña', 'webpagespassworded' ); ?></h3>
+					<h3><?php esc_html_e( 'Password field', 'glocalsaino-webpagespassworded' ); ?></h3>
 					<table class="form-table" role="presentation">
 						<tr>
-							<th scope="row"><?php esc_html_e( 'Color de fondo', 'webpagespassworded' ); ?></th>
+							<th scope="row"><?php esc_html_e( 'Background color', 'glocalsaino-webpagespassworded' ); ?></th>
 							<td><input type="text" name="<?php echo esc_attr( self::OPT_DESIGN ); ?>[input_bg]"
 								class="wppw-color-picker"
-								value="<?php echo esc_attr( $d['input_bg'] ?? '#ffffff' ); ?>"
-								<?php disabled( ! $is_premium ); ?> /></td>
+								value="<?php echo esc_attr( $d['input_bg'] ?? '#ffffff' ); ?>" /></td>
 						</tr>
 						<tr>
-							<th scope="row"><?php esc_html_e( 'Color de texto', 'webpagespassworded' ); ?></th>
+							<th scope="row"><?php esc_html_e( 'Text color', 'glocalsaino-webpagespassworded' ); ?></th>
 							<td><input type="text" name="<?php echo esc_attr( self::OPT_DESIGN ); ?>[input_text]"
 								class="wppw-color-picker"
-								value="<?php echo esc_attr( $d['input_text'] ?? '#333333' ); ?>"
-								<?php disabled( ! $is_premium ); ?> /></td>
+								value="<?php echo esc_attr( $d['input_text'] ?? '#333333' ); ?>" /></td>
 						</tr>
 						<tr>
-							<th scope="row"><?php esc_html_e( 'Color del borde', 'webpagespassworded' ); ?></th>
+							<th scope="row"><?php esc_html_e( 'Border color', 'glocalsaino-webpagespassworded' ); ?></th>
 							<td><input type="text" name="<?php echo esc_attr( self::OPT_DESIGN ); ?>[input_border]"
 								class="wppw-color-picker"
-								value="<?php echo esc_attr( $d['input_border'] ?? '#cccccc' ); ?>"
-								<?php disabled( ! $is_premium ); ?> /></td>
+								value="<?php echo esc_attr( $d['input_border'] ?? '#cccccc' ); ?>" /></td>
 						</tr>
 						<tr>
-							<th scope="row"><label for="wppw_input_size"><?php esc_html_e( 'Tamaño de fuente (px)', 'webpagespassworded' ); ?></label></th>
-							<td><input type="number" id="wppw_input_size"
+							<th scope="row"><label for="glocalsaino_wppw_input_size"><?php esc_html_e( 'Font size (px)', 'glocalsaino-webpagespassworded' ); ?></label></th>
+							<td><input type="number" id="glocalsaino_wppw_input_size"
 								name="<?php echo esc_attr( self::OPT_DESIGN ); ?>[input_size]"
 								min="10" max="48"
 								value="<?php echo esc_attr( $d['input_size'] ?? 16 ); ?>"
-								class="small-text" <?php disabled( ! $is_premium ); ?> /></td>
+								class="small-text" /></td>
 						</tr>
 						<tr>
-							<th scope="row"><label for="wppw_field_gap"><?php esc_html_e( 'Espacio hasta el botón (px)', 'webpagespassworded' ); ?></label></th>
-							<td><input type="number" id="wppw_field_gap"
+							<th scope="row"><label for="glocalsaino_wppw_field_gap"><?php esc_html_e( 'Gap to button (px)', 'glocalsaino-webpagespassworded' ); ?></label></th>
+							<td><input type="number" id="glocalsaino_wppw_field_gap"
 								name="<?php echo esc_attr( self::OPT_DESIGN ); ?>[field_gap]"
 								min="0" max="100"
 								value="<?php echo esc_attr( $d['field_gap'] ?? 10 ); ?>"
-								class="small-text" <?php disabled( ! $is_premium ); ?> /></td>
+								class="small-text" /></td>
 						</tr>
 					</table>
 
-					<h3><?php esc_html_e( 'Botón de envío', 'webpagespassworded' ); ?></h3>
+					<h3><?php esc_html_e( 'Submit button', 'glocalsaino-webpagespassworded' ); ?></h3>
 					<table class="form-table" role="presentation">
 						<tr>
-							<th scope="row"><?php esc_html_e( 'Color de fondo', 'webpagespassworded' ); ?></th>
+							<th scope="row"><?php esc_html_e( 'Background color', 'glocalsaino-webpagespassworded' ); ?></th>
 							<td><input type="text" name="<?php echo esc_attr( self::OPT_DESIGN ); ?>[btn_bg]"
 								class="wppw-color-picker"
-								value="<?php echo esc_attr( $d['btn_bg'] ?? '#0073aa' ); ?>"
-								<?php disabled( ! $is_premium ); ?> /></td>
+								value="<?php echo esc_attr( $d['btn_bg'] ?? '#0073aa' ); ?>" /></td>
 						</tr>
 						<tr>
-							<th scope="row"><?php esc_html_e( 'Color de texto', 'webpagespassworded' ); ?></th>
+							<th scope="row"><?php esc_html_e( 'Text color', 'glocalsaino-webpagespassworded' ); ?></th>
 							<td><input type="text" name="<?php echo esc_attr( self::OPT_DESIGN ); ?>[btn_text]"
 								class="wppw-color-picker"
-								value="<?php echo esc_attr( $d['btn_text'] ?? '#ffffff' ); ?>"
-								<?php disabled( ! $is_premium ); ?> /></td>
+								value="<?php echo esc_attr( $d['btn_text'] ?? '#ffffff' ); ?>" /></td>
 						</tr>
 						<tr>
-							<th scope="row"><label for="wppw_btn_size"><?php esc_html_e( 'Tamaño de fuente (px)', 'webpagespassworded' ); ?></label></th>
-							<td><input type="number" id="wppw_btn_size"
+							<th scope="row"><label for="glocalsaino_wppw_btn_size"><?php esc_html_e( 'Font size (px)', 'glocalsaino-webpagespassworded' ); ?></label></th>
+							<td><input type="number" id="glocalsaino_wppw_btn_size"
 								name="<?php echo esc_attr( self::OPT_DESIGN ); ?>[btn_size]"
 								min="10" max="48"
 								value="<?php echo esc_attr( $d['btn_size'] ?? 16 ); ?>"
-								class="small-text" <?php disabled( ! $is_premium ); ?> /></td>
+								class="small-text" /></td>
 						</tr>
 						<tr>
-							<th scope="row"><label for="wppw_btn_icon_fa"><?php esc_html_e( 'Icono (Font Awesome)', 'webpagespassworded' ); ?></label></th>
+							<th scope="row"><label for="glocalsaino_wppw_btn_icon_fa"><?php esc_html_e( 'Icon (Font Awesome)', 'glocalsaino-webpagespassworded' ); ?></label></th>
 							<td>
 								<?php
-								$fa_icons = [
+								$fa_icons = array(
 									'fa-solid fa-lock'             => 'fa-lock',
 									'fa-solid fa-key'              => 'fa-key',
 									'fa-solid fa-right-to-bracket' => 'fa-right-to-bracket',
@@ -271,7 +243,7 @@ class WebPagesPW_Admin {
 									'fa-solid fa-circle-user'      => 'fa-circle-user',
 									'fa-solid fa-bell'             => 'fa-bell',
 									'fa-solid fa-star'             => 'fa-star',
-								];
+								);
 								$current_icon = $d['btn_icon_fa'] ?? '';
 								?>
 								<div class="wppw-fa-quick-pick">
@@ -285,12 +257,11 @@ class WebPagesPW_Admin {
 									<?php endforeach; ?>
 								</div>
 								<div class="wppw-fa-custom">
-									<input type="text" id="wppw_btn_icon_fa"
+									<input type="text" id="glocalsaino_wppw_btn_icon_fa"
 										name="<?php echo esc_attr( self::OPT_DESIGN ); ?>[btn_icon_fa]"
 										value="<?php echo esc_attr( $current_icon ); ?>"
 										class="regular-text"
-										placeholder="fa-solid fa-key"
-										<?php disabled( ! $is_premium ); ?> />
+										placeholder="fa-solid fa-key" />
 									<span class="wppw-fa-live-preview">
 										<?php if ( $current_icon ) : ?>
 											<i class="<?php echo esc_attr( $current_icon ); ?>"></i>
@@ -298,196 +269,28 @@ class WebPagesPW_Admin {
 									</span>
 								</div>
 								<p class="description">
-									<?php esc_html_e( 'Haz clic en un icono de la cuadrícula o escribe la clase de Font Awesome 6 Free.', 'webpagespassworded' ); ?>
-									<a href="https://fontawesome.com/search?o=r&m=free" target="_blank" rel="noopener"><?php esc_html_e( 'Ver todos los iconos →', 'webpagespassworded' ); ?></a>
+									<?php esc_html_e( 'Click an icon in the grid or type a Font Awesome 6 Free class.', 'glocalsaino-webpagespassworded' ); ?>
+									<a href="https://fontawesome.com/search?o=r&m=free" target="_blank" rel="noopener"><?php esc_html_e( 'Browse all icons →', 'glocalsaino-webpagespassworded' ); ?></a>
 								</p>
 							</td>
 						</tr>
 						<tr>
-							<th scope="row"><label for="wppw_btn_icon_position"><?php esc_html_e( 'Posición del icono', 'webpagespassworded' ); ?></label></th>
+							<th scope="row"><label for="glocalsaino_wppw_btn_icon_position"><?php esc_html_e( 'Icon position', 'glocalsaino-webpagespassworded' ); ?></label></th>
 							<td>
 								<?php $pos = $d['btn_icon_position'] ?? 'left'; ?>
-								<select id="wppw_btn_icon_position"
-									name="<?php echo esc_attr( self::OPT_DESIGN ); ?>[btn_icon_position]"
-									<?php disabled( ! $is_premium ); ?>>
-									<option value="left"  <?php selected( $pos, 'left' ); ?>><?php esc_html_e( 'Izquierda del texto', 'webpagespassworded' ); ?></option>
-									<option value="right" <?php selected( $pos, 'right' ); ?>><?php esc_html_e( 'Derecha del texto', 'webpagespassworded' ); ?></option>
-									<option value="top"   <?php selected( $pos, 'top' ); ?>><?php esc_html_e( 'Encima del texto', 'webpagespassworded' ); ?></option>
+								<select id="glocalsaino_wppw_btn_icon_position"
+									name="<?php echo esc_attr( self::OPT_DESIGN ); ?>[btn_icon_position]">
+									<option value="left"  <?php selected( $pos, 'left' ); ?>><?php esc_html_e( 'Left of text', 'glocalsaino-webpagespassworded' ); ?></option>
+									<option value="right" <?php selected( $pos, 'right' ); ?>><?php esc_html_e( 'Right of text', 'glocalsaino-webpagespassworded' ); ?></option>
+									<option value="top"   <?php selected( $pos, 'top' ); ?>><?php esc_html_e( 'Above text', 'glocalsaino-webpagespassworded' ); ?></option>
 								</select>
 							</td>
 						</tr>
 					</table>
-
-					<?php if ( $is_premium ) : ?>
-						<?php submit_button( __( 'Guardar diseño', 'webpagespassworded' ) ); ?>
-					<?php else : ?>
-						<p><a href="<?php echo esc_url( wppw_get_upgrade_url() ); ?>" class="button wppw-upgrade-btn">&#11088; <?php esc_html_e( 'Actualizar a Premium', 'webpagespassworded' ); ?></a></p>
-					<?php endif; ?>
+					<?php submit_button( __( 'Save design', 'glocalsaino-webpagespassworded' ) ); ?>
 				</div>
 			</form>
-
-			<!-- ══════════════════════════════════════
-			     SECCIÓN 4 · Enlaces mágicos (premium)
-			     ══════════════════════════════════════ -->
-			<?php $this->render_magic_links_section( $is_premium, $locked ); ?>
-
 		</div>
-		<?php
-	}
-
-	private function render_magic_links_section( bool $is_premium, string $locked ): void {
-		$magic           = new WebPagesPW_MagicLinks();
-		$protected_pages = $magic->get_protected_pages();
-		$links           = $magic->get_links();
-		?>
-		<div class="wppw-section<?php echo esc_attr( $locked ); ?>">
-			<?php $this->premium_badge( $is_premium ); ?>
-			<h2><?php esc_html_e( 'Enlaces mágicos', 'webpagespassworded' ); ?></h2>
-			<p class="description"><?php esc_html_e( 'Genera enlaces que dan acceso directo a una página protegida sin pedir la contraseña. Útiles para compartir con un cliente o colaborador concreto.', 'webpagespassworded' ); ?></p>
-
-			<?php if ( isset( $_GET['wppw_magic_created'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- display-only flag set by our own admin-post redirect. ?>
-				<div class="notice notice-success inline"><p><?php esc_html_e( 'Enlace generado correctamente.', 'webpagespassworded' ); ?></p></div>
-			<?php elseif ( isset( $_GET['wppw_magic_error'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
-				<div class="notice notice-error inline"><p><?php esc_html_e( 'Selecciona una página que tenga contraseña configurada.', 'webpagespassworded' ); ?></p></div>
-			<?php endif; ?>
-
-			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-				<input type="hidden" name="action" value="wppw_magic_create" />
-				<?php wp_nonce_field( 'wppw_magic_create' ); ?>
-				<table class="form-table" role="presentation">
-					<tr>
-						<th scope="row"><label for="wppw_magic_page"><?php esc_html_e( 'Página protegida', 'webpagespassworded' ); ?></label></th>
-						<td>
-							<select id="wppw_magic_page" name="page_id" <?php disabled( ! $is_premium ); ?>>
-								<?php foreach ( $protected_pages as $p ) : ?>
-									<option value="<?php echo esc_attr( $p->ID ); ?>"><?php echo esc_html( $p->post_title ); ?></option>
-								<?php endforeach; ?>
-							</select>
-							<?php if ( empty( $protected_pages ) ) : ?>
-								<p class="description"><?php esc_html_e( 'No hay páginas protegidas con contraseña todavía.', 'webpagespassworded' ); ?></p>
-							<?php endif; ?>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row"><label for="wppw_magic_label"><?php esc_html_e( 'Etiqueta (opcional)', 'webpagespassworded' ); ?></label></th>
-						<td>
-							<input type="text" id="wppw_magic_label" name="label" class="regular-text"
-								placeholder="<?php esc_attr_e( 'Ej. Cliente Pérez', 'webpagespassworded' ); ?>"
-								<?php disabled( ! $is_premium ); ?> />
-						</td>
-					</tr>
-					<tr>
-						<th scope="row"><label for="wppw_magic_expires"><?php esc_html_e( 'Caducidad', 'webpagespassworded' ); ?></label></th>
-						<td>
-							<select id="wppw_magic_expires" name="expires_in" <?php disabled( ! $is_premium ); ?>>
-								<option value="0"><?php esc_html_e( 'Nunca', 'webpagespassworded' ); ?></option>
-								<option value="86400"><?php esc_html_e( '1 día', 'webpagespassworded' ); ?></option>
-								<option value="604800" selected><?php esc_html_e( '7 días', 'webpagespassworded' ); ?></option>
-								<option value="2592000"><?php esc_html_e( '30 días', 'webpagespassworded' ); ?></option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row"><label for="wppw_magic_uses"><?php esc_html_e( 'Usos máximos', 'webpagespassworded' ); ?></label></th>
-						<td>
-							<select id="wppw_magic_uses" name="max_uses" <?php disabled( ! $is_premium ); ?>>
-								<option value="0"><?php esc_html_e( 'Ilimitado', 'webpagespassworded' ); ?></option>
-								<option value="1"><?php esc_html_e( '1 uso', 'webpagespassworded' ); ?></option>
-								<option value="5"><?php esc_html_e( '5 usos', 'webpagespassworded' ); ?></option>
-								<option value="10"><?php esc_html_e( '10 usos', 'webpagespassworded' ); ?></option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row"><label for="wppw_magic_fallback"><?php esc_html_e( 'URL si el enlace ya no funciona', 'webpagespassworded' ); ?></label></th>
-						<td>
-							<input type="url" id="wppw_magic_fallback" name="fallback_url" class="regular-text"
-								placeholder="https://ejemplo.com/acceso-caducado"
-								<?php disabled( ! $is_premium ); ?> />
-							<p class="description"><?php esc_html_e( 'Opcional. Si el enlace está caducado o agotado, el visitante será redirigido a esta URL en lugar de ver un error.', 'webpagespassworded' ); ?></p>
-						</td>
-					</tr>
-				</table>
-				<?php if ( $is_premium ) : ?>
-					<?php submit_button( __( 'Generar enlace', 'webpagespassworded' ) ); ?>
-				<?php else : ?>
-					<p><a href="<?php echo esc_url( wppw_get_upgrade_url() ); ?>" class="button wppw-upgrade-btn">&#11088; <?php esc_html_e( 'Actualizar a Premium', 'webpagespassworded' ); ?></a></p>
-				<?php endif; ?>
-			</form>
-
-			<?php if ( $is_premium && ! empty( $links ) ) : ?>
-				<h3><?php esc_html_e( 'Enlaces existentes', 'webpagespassworded' ); ?></h3>
-				<table class="widefat striped wppw-magic-table">
-					<thead>
-						<tr>
-							<th><?php esc_html_e( 'Página', 'webpagespassworded' ); ?></th>
-							<th><?php esc_html_e( 'Etiqueta', 'webpagespassworded' ); ?></th>
-							<th><?php esc_html_e( 'Enlace', 'webpagespassworded' ); ?></th>
-							<th><?php esc_html_e( 'Caduca', 'webpagespassworded' ); ?></th>
-							<th><?php esc_html_e( 'Usos', 'webpagespassworded' ); ?></th>
-							<th><?php esc_html_e( 'Estado', 'webpagespassworded' ); ?></th>
-							<th><?php esc_html_e( 'Acciones', 'webpagespassworded' ); ?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php foreach ( $links as $token => $link ) :
-							$page_title = get_the_title( $link['page_id'] );
-							$page_title = $page_title ? $page_title : ( '#' . $link['page_id'] );
-							$link_url   = $magic->get_link_url( $token, $link['page_id'] );
-							$expired    = $magic->is_expired( $link );
-							$exhausted  = $magic->is_exhausted( $link );
-							$uses_label = $link['uses'] . ( $link['max_uses'] ? ' / ' . $link['max_uses'] : '' );
-							?>
-							<tr>
-								<td><?php echo esc_html( $page_title ); ?></td>
-								<td>
-								<?php echo esc_html( $link['label'] ?: '—' ); ?>
-								<?php if ( ! empty( $link['fallback_url'] ) ) : ?>
-									<br><small class="description"><?php esc_html_e( 'Fallback:', 'webpagespassworded' ); ?> <a href="<?php echo esc_url( $link['fallback_url'] ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $link['fallback_url'] ); ?></a></small>
-								<?php endif; ?>
-							</td>
-								<td>
-									<input type="text" readonly class="wppw-magic-url-field" value="<?php echo esc_url( $link_url ); ?>" onclick="this.select();" />
-									<button type="button" class="button wppw-copy-link" data-url="<?php echo esc_url( $link_url ); ?>"><?php esc_html_e( 'Copiar', 'webpagespassworded' ); ?></button>
-								</td>
-								<td><?php echo $link['expires'] ? esc_html( date_i18n( 'd/m/Y H:i', $link['expires'] ) ) : esc_html__( 'Nunca', 'webpagespassworded' ); ?></td>
-								<td><?php echo esc_html( $uses_label ); ?></td>
-								<td>
-									<?php if ( $expired ) : ?>
-										<span class="wppw-status wppw-status--expired"><?php esc_html_e( 'Caducado', 'webpagespassworded' ); ?></span>
-									<?php elseif ( $exhausted ) : ?>
-										<span class="wppw-status wppw-status--exhausted"><?php esc_html_e( 'Agotado', 'webpagespassworded' ); ?></span>
-									<?php else : ?>
-										<span class="wppw-status wppw-status--active"><?php esc_html_e( 'Activo', 'webpagespassworded' ); ?></span>
-									<?php endif; ?>
-								</td>
-								<td>
-									<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="display:inline;">
-										<input type="hidden" name="action" value="wppw_magic_revoke" />
-										<input type="hidden" name="token" value="<?php echo esc_attr( $token ); ?>" />
-										<?php wp_nonce_field( 'wppw_magic_revoke' ); ?>
-										<button type="submit" class="button-link-delete"
-											onclick="return confirm('<?php echo esc_js( __( '¿Revocar este enlace? Dejará de funcionar inmediatamente.', 'webpagespassworded' ) ); ?>');">
-											<?php esc_html_e( 'Revocar', 'webpagespassworded' ); ?>
-										</button>
-									</form>
-								</td>
-							</tr>
-						<?php endforeach; ?>
-					</tbody>
-				</table>
-			<?php endif; ?>
-		</div>
-		<?php
-	}
-
-
-	private function premium_badge( bool $is_premium ): void {
-		if ( $is_premium ) {
-			return;
-		}
-		?>
-		<div class="wppw-premium-badge">&#11088; <?php esc_html_e( 'Premium', 'webpagespassworded' ); ?></div>
 		<?php
 	}
 }

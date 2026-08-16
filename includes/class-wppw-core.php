@@ -8,19 +8,18 @@ class WebPagesPW_Core {
 	public function wppw_shortcode( $atts ): string {
 		global $post;
 
-		$settings = wppw_get_settings();
+		$settings = glocalsaino_wppw_get_settings();
 
-		// Global label from settings (free) takes precedence over shortcode default, but shortcode attr overrides all.
 		$default_label = ! empty( $settings['button_label'] )
 			? $settings['button_label']
-			: __( 'Enter', 'webpagespassworded' );
+			: __( 'Enter', 'glocalsaino-webpagespassworded' );
 
 		$atts = shortcode_atts(
-			[
+			array(
 				'label'  => $default_label,
-				'id'     => 'wppwLogin',
+				'id'     => 'glocalsaino-wppw-login',
 				'parent' => $post->ID,
-			],
+			),
 			$atts
 		);
 
@@ -28,53 +27,46 @@ class WebPagesPW_Core {
 		$label   = esc_html( $atts['label'] );
 		$parent  = (int) $atts['parent'];
 
-		$msg_wrong_pw = esc_html__( 'La contraseña es incorrecta.', 'webpagespassworded' );
-		$msg_lockout  = esc_html__( 'Demasiados intentos fallidos. Espera 15 minutos antes de intentarlo de nuevo.', 'webpagespassworded' );
+		$msg_wrong_pw = ! empty( $settings['msg_wrong_pw'] )
+			? esc_html( $settings['msg_wrong_pw'] )
+			: esc_html__( 'Incorrect password.', 'glocalsaino-webpagespassworded' );
 
-		if ( web_fs() && web_fs()->is__premium_only() ) {
-			if ( ! empty( $settings['msg_wrong_pw'] ) ) {
-				$msg_wrong_pw = esc_html( $settings['msg_wrong_pw'] );
-			}
-			if ( ! empty( $settings['msg_lockout'] ) ) {
-				$msg_lockout = esc_html( $settings['msg_lockout'] );
-			}
-		}
+		$msg_lockout = ! empty( $settings['msg_lockout'] )
+			? esc_html( $settings['msg_lockout'] )
+			: esc_html__( 'Too many failed attempts. Please wait 15 minutes before trying again.', 'glocalsaino-webpagespassworded' );
 
-		// Premium: Font Awesome icon with configurable position.
 		$button_inner = $label;
-		if ( web_fs() && web_fs()->is__premium_only() ) {
-			if ( ! empty( $settings['btn_icon_fa'] ) ) {
-				$icon_class = esc_attr( $settings['btn_icon_fa'] );
-				$icon_pos   = $settings['btn_icon_position'] ?? 'left';
-				$icon_tag   = "<i class=\"{$icon_class}\" aria-hidden=\"true\"></i>";
-				$label_span = "<span class=\"wppw-btn-label\">{$label}</span>";
+		if ( ! empty( $settings['btn_icon_fa'] ) ) {
+			$icon_class = esc_attr( $settings['btn_icon_fa'] );
+			$icon_pos   = $settings['btn_icon_position'] ?? 'left';
+			$icon_tag   = "<i class=\"{$icon_class}\" aria-hidden=\"true\"></i>";
+			$label_span = "<span class=\"glocalsaino-wppw-btn-label\">{$label}</span>";
 
-				if ( 'top' === $icon_pos ) {
-					$button_inner = "{$icon_tag}{$label_span}";
-				} elseif ( 'right' === $icon_pos ) {
-					$button_inner = "{$label_span}{$icon_tag}";
-				} else {
-					$button_inner = "{$icon_tag}{$label_span}";
-				}
+			if ( 'top' === $icon_pos ) {
+				$button_inner = "{$icon_tag}{$label_span}";
+			} elseif ( 'right' === $icon_pos ) {
+				$button_inner = "{$label_span}{$icon_tag}";
+			} else {
+				$button_inner = "{$icon_tag}{$label_span}";
 			}
 		}
 
 		$permalink = esc_url( get_permalink() );
-		$nonce     = wp_create_nonce( 'wppwPage' );
+		$nonce     = wp_create_nonce( 'glocalsaino_wppw_page' );
 
-		$result  = "<div class=\"wppw-form-wrapper\">\n";
+		$result  = "<div class=\"glocalsaino-wppw-form-wrapper\">\n";
 		$result .= "<form id=\"{$form_id}\" method=\"post\" action=\"{$permalink}\">\n";
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- these GET flags are set internally by process_form(), not by user input.
-		if ( isset( $_GET['wppwlocked'] ) ) {
-			$result .= "<p id=\"wppwError\">{$msg_lockout}</p>\n";
-		} elseif ( isset( $_GET['wrongpw'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$result .= "<p id=\"wppwError\">{$msg_wrong_pw}</p>\n";
+		if ( isset( $_GET['glocalsaino_wppw_locked'] ) ) {
+			$result .= "<p class=\"glocalsaino-wppw-error\">{$msg_lockout}</p>\n";
+		} elseif ( isset( $_GET['glocalsaino_wppw_wrongpw'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$result .= "<p class=\"glocalsaino-wppw-error\">{$msg_wrong_pw}</p>\n";
 		}
 
-		$result .= "\t<input class=\"requiredField\" type=\"password\" name=\"wppwPassword\" id=\"wppwPassword\" value=\"\" />\n";
-		$result .= "\t<input type=\"hidden\" name=\"wppwParent\" value=\"{$parent}\" />\n";
-		$result .= "\t<input type=\"hidden\" name=\"wppwPage_nonce\" value=\"{$nonce}\" />\n";
+		$result .= "\t<input class=\"requiredField\" type=\"password\" name=\"glocalsaino_wppw_password\" id=\"glocalsaino-wppw-password\" value=\"\" />\n";
+		$result .= "\t<input type=\"hidden\" name=\"glocalsaino_wppw_parent\" value=\"{$parent}\" />\n";
+		$result .= "\t<input type=\"hidden\" name=\"glocalsaino_wppw_nonce\" value=\"{$nonce}\" />\n";
 		$result .= "\t<button type=\"submit\">{$button_inner}</button>\n";
 		$result .= "</form>\n";
 		$result .= "</div>\n";
@@ -92,22 +84,22 @@ class WebPagesPW_Core {
 	}
 
 	private function is_locked_out(): bool {
-		return (bool) get_transient( $this->ip_transient_key( 'wppw_lock_' ) );
+		return (bool) get_transient( $this->ip_transient_key( 'glocalsaino_wppw_lock_' ) );
 	}
 
 	private function record_failure(): void {
-		$key      = $this->ip_transient_key( 'wppw_fail_' );
+		$key      = $this->ip_transient_key( 'glocalsaino_wppw_fail_' );
 		$attempts = (int) get_transient( $key ) + 1;
 		set_transient( $key, $attempts, WPPW_LOCKOUT_SECONDS );
 
 		if ( $attempts >= WPPW_MAX_ATTEMPTS ) {
-			set_transient( $this->ip_transient_key( 'wppw_lock_' ), 1, WPPW_LOCKOUT_SECONDS );
+			set_transient( $this->ip_transient_key( 'glocalsaino_wppw_lock_' ), 1, WPPW_LOCKOUT_SECONDS );
 		}
 	}
 
 	private function clear_rate_limit(): void {
-		delete_transient( $this->ip_transient_key( 'wppw_fail_' ) );
-		delete_transient( $this->ip_transient_key( 'wppw_lock_' ) );
+		delete_transient( $this->ip_transient_key( 'glocalsaino_wppw_fail_' ) );
+		delete_transient( $this->ip_transient_key( 'glocalsaino_wppw_lock_' ) );
 	}
 
 	public function pw_redirect( string $perma, string $password ): void {
@@ -126,14 +118,14 @@ class WebPagesPW_Core {
 		setcookie(
 			'wp-postpass_' . COOKIEHASH,
 			$cookiePW,
-			[
-				'expires'  => time() + SECONDS_TO_STORE_PW,
+			array(
+				'expires'  => time() + WPPW_COOKIE_SECONDS,
 				'path'     => COOKIEPATH,
 				'domain'   => COOKIE_DOMAIN,
 				'secure'   => $secure,
 				'httponly' => true,
 				'samesite' => 'Strict',
-			]
+			)
 		);
 
 		wp_safe_redirect( $perma );
@@ -141,24 +133,24 @@ class WebPagesPW_Core {
 	}
 
 	public function process_form(): void {
-		if ( ! isset( $_POST['wppwPassword'], $_POST['wppwParent'], $_POST['wppwPage_nonce'] ) ) {
+		if ( ! isset( $_POST['glocalsaino_wppw_password'], $_POST['glocalsaino_wppw_parent'], $_POST['glocalsaino_wppw_nonce'] ) ) {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wppwPage_nonce'] ) ), 'wppwPage' ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['glocalsaino_wppw_nonce'] ) ), 'glocalsaino_wppw_page' ) ) {
 			return;
 		}
 
 		if ( $this->is_locked_out() ) {
-			$_GET['wppwlocked'] = true;
+			$_GET['glocalsaino_wppw_locked'] = true;
 			return;
 		}
 
-		$parentForm   = (int) $_POST['wppwParent'];
+		$parentForm   = (int) $_POST['glocalsaino_wppw_parent'];
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- passwords cannot be sanitized without corrupting special characters.
-		$postPassword = wp_unslash( (string) $_POST['wppwPassword'] );
+		$postPassword = wp_unslash( (string) $_POST['glocalsaino_wppw_password'] );
 
-		$args = [
+		$args = array(
 			'sort_order'   => 'DESC',
 			'sort_column'  => 'post_date',
 			'hierarchical' => 1,
@@ -166,7 +158,7 @@ class WebPagesPW_Core {
 			'parent'       => $parentForm,
 			'post_type'    => 'page',
 			'post_status'  => 'publish',
-		];
+		);
 
 		if ( function_exists( 'pause_exclude_pages' ) ) {
 			pause_exclude_pages();
@@ -185,19 +177,15 @@ class WebPagesPW_Core {
 			}
 		}
 
-		// Password submitted but no match found — increment failure counter and signal the form.
 		$this->record_failure();
-		$_GET['wrongpw'] = true;
+		$_GET['glocalsaino_wppw_wrongpw'] = true;
 	}
 }
 
-/**
- * Returns all plugin settings merged from the three independent option keys.
- */
-function wppw_get_settings(): array {
+function glocalsaino_wppw_get_settings(): array {
 	return array_merge(
-		(array) get_option( 'wppw_general',  [] ),
-		(array) get_option( 'wppw_messages', [] ),
-		(array) get_option( 'wppw_design',   [] )
+		(array) get_option( 'glocalsaino_wppw_general',  array() ),
+		(array) get_option( 'glocalsaino_wppw_messages', array() ),
+		(array) get_option( 'glocalsaino_wppw_design',   array() )
 	);
 }

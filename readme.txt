@@ -1,9 +1,9 @@
-=== WebPagesPassworded ===
-Contributors: glocalsaino
+=== GlocalSaino WebPagesPassworded ===
+Contributors: glocalsaino, rafammoo
 Tags: password, protected pages, child pages, access control, shortcode
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 4.3.1
+Stable tag: 4.4.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -12,13 +12,15 @@ Single password form for groups of password-protected child pages. Enter the pas
 
 == Description ==
 
-**WebPagesPassworded** creates a single access page that acts as a gateway for a group of password-protected child pages. Place the `[wppw]` shortcode on a parent page: the plugin renders a password form and, on a correct match, redirects the visitor directly to the matching child page.
+**GlocalSaino WebPagesPassworded** creates a single access page that acts as a gateway for a group of password-protected child pages. Place the `[glocalsaino_wppw]` shortcode on a parent page: the plugin renders a password form and, on a correct match, redirects the visitor directly to the matching child page.
+
+Every feature listed below is included, free and unlimited — nothing is locked behind a license or upgrade.
 
 = How it works =
 
 1. In WordPress, create a parent page (e.g. "Private Area") and set the pages you want to protect as its children.
 2. Assign each child page its own password via **Publish → Visibility → Password protected** in the editor.
-3. Insert the `[wppw]` shortcode on the parent page.
+3. Insert the `[glocalsaino_wppw]` shortcode on the parent page.
 4. When a visitor arrives, they see the plugin's password form. If the password matches a child page, they are redirected to it automatically.
 
 = Features =
@@ -27,26 +29,28 @@ Single password form for groups of password-protected child pages. Enter the pas
 * **Automatic redirect** — the visitor lands directly on the right page without extra steps.
 * **Session cookie** — the password is stored in a cookie for 10 days so the visitor does not need to re-enter it on subsequent visits.
 * **Security nonce** — the form includes a WordPress nonce to guard submissions against CSRF attacks.
-* **Clear error message** — if the password is wrong, an error is shown inline in the same form.
-* **Brute-force protection** — after 5 failed attempts from the same IP, access is locked for 15 minutes. The lockout uses WordPress transients, with no extra database tables.
-* **Secure cookie** — the session cookie is set with `HttpOnly` and `SameSite=Strict` flags to block JavaScript access and cross-site submission.
+* **Customisable error messages** — configure the wrong-password and lockout messages from the settings panel.
+* **Brute-force protection** — after 5 failed attempts from the same IP, access is locked for 15 minutes using WordPress transients, with no extra database tables.
+* **Secure cookie** — the session cookie is set with `HttpOnly` and `SameSite=Strict` flags.
+* **Form design** — adjust the colours, font sizes, and spacing of the form fields and button directly from the settings panel.
+* **Button icon** — choose a Font Awesome icon to display on the submit button, with configurable position (left, right, or above the text).
 * **No external dependencies** — the plugin loads no external libraries or remote resources.
 
 = Usage =
 
 Insert the shortcode on the parent page that will act as the access form:
 
-`[wppw]`
+`[glocalsaino_wppw]`
 
 Optional shortcode parameters:
 
 * `label` — submit button text. Default: `Enter`.
-* `id` — `id` attribute of the `<form>` element. Default: `wppwLogin`.
+* `id` — `id` attribute of the `<form>` element. Default: `glocalsaino-wppw-login`.
 * `parent` — ID of the parent page whose children will be searched. Default: the current page ID.
 
 Example with parameters:
 
-`[wppw label="Log in" id="my-form"]`
+`[glocalsaino_wppw label="Log in" id="my-form"]`
 
 = Requirements =
 
@@ -56,23 +60,24 @@ Example with parameters:
 
 == Screenshots ==
 
-1. Password form on the front-end, with a custom icon and styles applied via the premium version.
-2. Settings panel: general settings section (button text and shortcode reference) and customisable error messages (premium).
-3. Settings panel: form design section with colour pickers, font size controls, and a Font Awesome icon picker (premium).
-4. Settings panel: magic links section with the creation form and a table of existing links showing status and actions (premium).
+1. Password form on the front-end, with a custom icon and custom colours applied via the settings panel.
+2. Settings panel: general settings section (button label and shortcode reference) and customisable error messages.
+3. Settings panel: form design section with colour pickers, font size controls, and a Font Awesome icon picker.
+4. WordPress editor showing the parent page with the [glocalsaino_wppw] shortcode inserted.
+5. WordPress editor showing a child page configured as a child of the parent page and protected with a password.
 
 == Installation ==
 
-1. Upload the `webpagespassworded` folder to `/wp-content/plugins/`.
+1. Upload the `glocalsaino-webpagespassworded` folder to `/wp-content/plugins/`.
 2. Activate the plugin from **Plugins → Installed Plugins**.
 3. Create a parent page and add child pages with their passwords via **Publish → Visibility → Password protected**.
-4. Insert `[wppw]` on the parent page.
+4. Insert `[glocalsaino_wppw]` on the parent page.
 
 == Frequently Asked Questions ==
 
 = Can I have several parent pages each with their own group of child pages? =
 
-Yes. The `[wppw]` shortcode placed on each parent page searches only among its direct child pages. Each group is independent.
+Yes. The `[glocalsaino_wppw]` shortcode placed on each parent page searches only among its direct child pages. Each group is independent.
 
 = What happens if two child pages share the same password? =
 
@@ -88,11 +93,11 @@ Yes. If the site uses HTTPS the cookie is automatically marked as `Secure`.
 
 = I entered the correct password but I see the lockout message. What should I do? =
 
-The lockout lasts 15 minutes and is tied to the IP address. If you are the administrator and need to clear it early, delete the transients with the prefix `wppw_lock_` and `wppw_fail_` from the database or with a transient management plugin.
+The lockout lasts 15 minutes and is tied to the IP address. If you are the administrator and need to clear it early, delete the transients with the prefix `glocalsaino_wppw_lock_` and `glocalsaino_wppw_fail_` from the database or with a transient management plugin.
 
 = Is it compatible with page-exclusion plugins? =
 
-Yes. If the site has a plugin that exposes `pause_exclude_pages()` / `resume_exclude_pages()` (a common pattern in menu and listing exclusion plugins), WebPagesPassworded calls them around its query to ensure protected pages are always found.
+Yes. If the site has a plugin that exposes `pause_exclude_pages()` / `resume_exclude_pages()` (a common pattern in menu and listing exclusion plugins), the plugin calls them around its query to ensure protected pages are always found.
 
 = The password is correct but the visitor is not redirected. What could be wrong? =
 
@@ -104,7 +109,7 @@ Check that:
 
 == Privacy Policy ==
 
-WebPagesPassworded does not collect, store, or transmit any personal data.
+GlocalSaino WebPagesPassworded does not collect, store, or transmit any personal data.
 
 * The plugin reads the password entered in the form only to compare it against the passwords of the child pages stored in the WordPress database. That comparison happens entirely on the server and the data is not saved or sent to any third party.
 * A cookie (`wp-postpass_*`) is stored in the visitor's browser to maintain access for 10 days. This is a standard WordPress cookie and contains only the hash of the password, never the password in plain text.
@@ -112,63 +117,21 @@ WebPagesPassworded does not collect, store, or transmit any personal data.
 
 == Upgrade Notice ==
 
-= 4.3.1 =
-The login links feature has been moved to the standalone WP Login Links plugin. No migration needed in WebPagesPassworded.
-
-= 4.1.0 =
-New premium feature: magic links for direct access without a password. No migration required.
-
-= 4.0.0 =
-Major version with Freemius integration and premium features. Backwards compatible: the `[wppw]` shortcode continues to work as before.
-
-= 3.1.0 =
-Recommended security update. Adds brute-force protection and improves session cookie flags.
-
-= 3.0.0 =
-The shortcode has changed from `[smartpwpages]` to `[wppw]`. Replace the shortcode on all pages where it is inserted.
+= 4.4.0 =
+Plugin renamed to GlocalSaino WebPagesPassworded. New slug: glocalsaino-webpagespassworded. Shortcode updated to [glocalsaino_wppw]. All features are now included free — no license required.
 
 == Changelog ==
 
+= 4.4.0 =
+* Plugin renamed to GlocalSaino WebPagesPassworded (slug: glocalsaino-webpagespassworded).
+* Shortcode changed to [glocalsaino_wppw].
+* All features (custom error messages, form design, button icon) are now fully free and unlimited.
+* Magic links feature removed from this plugin; will be released as a separate add-on.
+* Inline styles replaced with wp_add_inline_style() for WP.org compliance.
+* All registration identifiers (menu slug, option names, script handles, transient keys) updated with the glocalsaino_wppw_ prefix.
+
 = 4.3.1 =
-* The login links feature has been extracted to the standalone WP Login Links plugin.
-
-= 4.2.0 =
-* New premium feature: login links. Generates signed links that authenticate a WordPress user directly, without entering a password.
-* The login link token is a 256-bit random value; it never contains or exposes user credentials.
-* Configurable expiry and maximum uses (default: 1 day, 1 use).
-* Configurable post-login redirect URL per link.
-* Admin panel for creating, listing, and revoking login links, with one-click clipboard copy.
-
-= 4.1.0 =
-* New premium feature: magic links. Generates links that grant direct access to a protected page without asking for the password.
-* Magic links use a 256-bit random token (not the real password), with configurable expiry and maximum uses.
-* Admin panel for creating, listing, and revoking magic links, with one-click clipboard copy.
-* Fixed Font Awesome enqueue: it was loading too late inside wp_head and never printing.
-* Replaced has_shortcode() detection (which failed with Elementor and other page builders) with a check based on is_singular().
-* Added !important to generated CSS values to prevent the active theme from overriding the configured design.
-
-= 4.0.0 =
-* Freemius integration for licence management and premium version.
-* New panel in Settings → WebPagesPassworded with free and premium sections.
-* Premium: customisable button text from the settings panel.
-* Premium: customisable error messages (wrong password and lockout).
-* Premium: configurable form design (input background, text and border colours; button colour, size and font).
-* Premium: customisable button icon, selected from a Font Awesome icon grid.
-* Premium: configurable spacing between the password field and the button.
-* Code refactored into separate classes.
-* Button changed from `<input type="submit">` to `<button type="submit">` to allow HTML content.
-* CSS injected only on pages that contain the `[wppw]` shortcode.
-
-= 3.1.0 =
-* Added brute-force protection: 15-minute lockout after 5 failed attempts per IP.
-* Session cookie set with `HttpOnly` and `SameSite=Strict` flags.
-* Added direct file access guard.
-* Fixed incorrect password comparison in form processing.
-
-= 3.0.0 =
-* Full refactor for PHP 7.4+ and WordPress 5.0+ compatibility.
-* Removed use of `extract()`.
-* Added explicit visibility to all class methods.
-* Added return type hints to main methods.
-* Improved sanitisation of POST data.
-* New shortcode and form field names with `wppw` prefix.
+* Fix: admin assets (Font Awesome, colour pickers) not loading after moving to top-level menu.
+* Fix: update admin enqueue hook from settings_page_ to toplevel_page_.
+* Added composer.json to satisfy WP.org plugin checker.
+* Author unified to Glocal Saino across all files.

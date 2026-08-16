@@ -5,43 +5,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WebPagesPW_Styles {
 
-	/**
-	 * Enqueues Font Awesome via wp_enqueue_scripts (fires before wp_head prints styles).
-	 * No shortcode detection here — if premium + icon is configured, we load it on
-	 * every singular page to avoid false negatives with page builders.
-	 */
 	public function enqueue_frontend_assets(): void {
 		if ( ! is_singular() ) {
 			return;
 		}
-		if ( web_fs() && web_fs()->is__premium_only() ) {
-			$s = wppw_get_settings();
-			if ( ! empty( $s['btn_icon_fa'] ) ) {
-				wp_enqueue_style(
-					'wppw-font-awesome',
-					WPPW_PLUGIN_URL . 'assets/vendor/font-awesome/css/all.min.css',
-					[],
-					'6.5.1'
-				);
-			}
-		}
-	}
 
-	/**
-	 * Outputs inline CSS in <head> on every singular page when premium is active.
-	 * Skipping shortcode detection avoids false negatives with Elementor and other
-	 * page builders that store content outside post_content.
-	 */
-	public function output_form_styles(): void {
-		if ( ! is_singular() ) {
-			return;
+		$s = glocalsaino_wppw_get_settings();
+
+		// Always enqueue a lightweight base stylesheet so we have a handle
+		// to attach dynamic inline styles via wp_add_inline_style().
+		wp_enqueue_style(
+			'glocalsaino-wppw-frontend',
+			WPPW_PLUGIN_URL . 'assets/css/frontend.css',
+			array(),
+			WPPW_VERSION
+		);
+
+		if ( ! empty( $s['btn_icon_fa'] ) ) {
+			wp_enqueue_style(
+				'glocalsaino-wppw-font-awesome',
+				WPPW_PLUGIN_URL . 'assets/vendor/font-awesome/css/all.min.css',
+				array(),
+				'6.5.1'
+			);
 		}
-		if ( web_fs() && web_fs()->is__premium_only() ) {
-			$css = $this->build_css( wppw_get_settings() );
-			if ( ! empty( $css ) ) {
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS is pre-sanitized: colors via sanitize_hex_color(), sizes via absint(), class name via sanitize_text_field().
-			echo "<style id=\"wppw-form-styles\">\n{$css}\n</style>\n";
-			}
+
+		$css = $this->build_css( $s );
+		if ( ! empty( $css ) ) {
+			wp_add_inline_style( 'glocalsaino-wppw-frontend', $css );
 		}
 	}
 
@@ -87,10 +78,10 @@ class WebPagesPW_Styles {
 		$css = '';
 
 		if ( $input_rules ) {
-			$css .= "body .wppw-form-wrapper input[type=\"password\"]{{$input_rules}}\n";
+			$css .= "body .glocalsaino-wppw-form-wrapper input[type=\"password\"]{{$input_rules}}\n";
 		}
 		if ( $btn_rules ) {
-			$css .= "body .wppw-form-wrapper button[type=\"submit\"]{{$btn_rules}}\n";
+			$css .= "body .glocalsaino-wppw-form-wrapper button[type=\"submit\"]{{$btn_rules}}\n";
 		}
 
 		return $css;

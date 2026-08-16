@@ -1,6 +1,6 @@
 {
-    "name": "glocalsaino/webpagespassworded",
-    "description": "WebPagesPassworded WordPress plugin dependencies",
+    "name": "glocalsaino/glocalsaino-webpagespassworded",
+    "description": "GlocalSaino WebPagesPassworded WordPress plugin dependencies",
     "type": "project",
     "license": "GPL-2.0-or-later",
     "require": {
