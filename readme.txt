@@ -2,8 +2,8 @@
 Contributors: glocalsaino, rafammoo
 Tags: password, protected pages, child pages, access control, shortcode
 Requires at least: 5.0
-Tested up to: 7.0
-Stable tag: 4.4.3
+Tested up to: 7.1
+Stable tag: 4.4.9
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -60,11 +60,12 @@ Example with parameters:
 
 == Screenshots ==
 
-1. Password form on the front-end, with a custom icon and custom colours applied via the settings panel.
-2. Settings panel: general settings section (button label and shortcode reference) and customisable error messages.
-3. Settings panel: form design section with colour pickers, font size controls, and a Font Awesome icon picker.
-4. WordPress editor showing the parent page with the [glocalsaino_wppw] shortcode inserted.
-5. WordPress editor showing a child page configured as a child of the parent page and protected with a password.
+1. Password form on the front end — parent page showing the password input field as visitors see it.
+2. Admin settings — General Settings: button label, shortcode reference and available shortcode parameters.
+3. Admin settings — Error Messages: customisable wrong-password and too-many-attempts messages.
+4. Admin settings — Form Design: appearance controls for the password input field (colours, size, icon).
+5. WordPress editor — parent page with the [glocalsaino_wppw] shortcode and annotated explanatory overlays.
+6. WordPress editor — password-protected child page with annotated explanatory overlays showing the required configuration.
 
 == Installation ==
 
@@ -121,6 +122,22 @@ GlocalSaino WebPagesPassworded does not collect, store, or transmit any personal
 Fix: global variable names now carry the glocalsaino_wppw_ prefix (PHPCS PrefixAllGlobals compliance).
 
 == Changelog ==
+
+= 4.4.9 =
+* All admin UI text changed to English as base language for translation support.
+
+= 4.4.7 =
+* Fix: replace wp_redirect() with a rendered page in the Extensions submenu (PHPCS SafeRedirect).
+* Update Tested up to: 7.1.
+
+= 4.4.6 =
+* Disable Freemius add-ons marketplace UI (has_addons: false); add-on promoted via own "Extensiones" submenu instead.
+
+= 4.4.5 =
+* Add "Extensiones" submenu linking to the Magic Links add-on page.
+
+= 4.4.4 =
+* Enable add-on support (has_addons: true) so Freemius can register the Magic Links add-on.
 
 = 4.4.3 =
 * Tweak: rename first submenu item from "WebPagesPassworded" to "Configuración" so it fits in the sidebar.

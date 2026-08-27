@@ -23,10 +23,22 @@ class GlocalSaino_Wppw_Admin {
 		add_submenu_page(
 			'glocalsaino-wppw-settings',
 			__( 'GlocalSaino WebPagesPassworded', 'glocalsaino-webpagespassworded' ),
-			__( 'Configuración', 'glocalsaino-webpagespassworded' ),
+			__( 'Settings', 'glocalsaino-webpagespassworded' ),
 			'manage_options',
 			'glocalsaino-wppw-settings',
 			array( $this, 'render_settings_page' )
+		);
+
+	}
+
+	public function register_extensions_submenu(): void {
+		add_submenu_page(
+			'glocalsaino-wppw-settings',
+			__( 'Extensions', 'glocalsaino-webpagespassworded' ),
+			__( 'Extensions', 'glocalsaino-webpagespassworded' ),
+			'manage_options',
+			'glocalsaino-wppw-extensions',
+			array( $this, 'render_extensions_page' )
 		);
 	}
 
@@ -299,6 +311,59 @@ class GlocalSaino_Wppw_Admin {
 					<?php submit_button( __( 'Save design', 'glocalsaino-webpagespassworded' ) ); ?>
 				</div>
 			</form>
+		</div>
+		<?php
+	}
+
+	public function render_extensions_page(): void {
+		$banner_url = GLOCALSAINO_WPPW_URL . 'assets/img/magic-links-banner.png';
+		?>
+		<div class="wrap">
+			<h1><?php esc_html_e( 'Extensions', 'glocalsaino-webpagespassworded' ); ?></h1>
+
+			<img src="<?php echo esc_url( $banner_url ); ?>"
+				alt="<?php esc_attr_e( 'GlocalSaino WPPW Magic Links', 'glocalsaino-webpagespassworded' ); ?>"
+				style="max-width:772px;width:100%;height:auto;display:block;margin:16px 0 24px;" />
+
+			<p style="font-size:14px;max-width:760px;">
+				<?php esc_html_e( 'GlocalSaino WPPW Magic Links lets you generate signed links that grant direct access to password-protected pages — no password form, no friction. Control expiry, usage limits, and revoke any link instantly.', 'glocalsaino-webpagespassworded' ); ?>
+			</p>
+
+			<ol style="max-width:760px;font-size:14px;line-height:1.8;">
+				<li><strong><?php esc_html_e( 'Send access, not passwords.', 'glocalsaino-webpagespassworded' ); ?></strong>
+					<?php esc_html_e( 'Stop copying and pasting passwords into emails. Generate a single link and share it — your client clicks it and lands directly on the protected page.', 'glocalsaino-webpagespassworded' ); ?></li>
+				<li><strong><?php esc_html_e( 'Control who gets in and for how long.', 'glocalsaino-webpagespassworded' ); ?></strong>
+					<?php esc_html_e( 'Set an expiry date or a maximum number of uses on each link. When a project ends or a client\'s access period is over, the link stops working on its own.', 'glocalsaino-webpagespassworded' ); ?></li>
+				<li><strong><?php esc_html_e( 'Protect your passwords without exposing them.', 'glocalsaino-webpagespassworded' ); ?></strong>
+					<?php esc_html_e( 'The real page password never appears in the URL. You can share access with dozens of individual people, revoke any one of them instantly, and the underlying password remains unchanged for everyone else.', 'glocalsaino-webpagespassworded' ); ?></li>
+			</ol>
+
+			<hr style="max-width:760px;margin:24px 0;" />
+
+			<p style="font-size:14px;max-width:760px;">
+				<?php esc_html_e( 'Managing password-protected content should not mean managing passwords. GlocalSaino WPPW Magic Links removes that friction entirely.', 'glocalsaino-webpagespassworded' ); ?>
+			</p>
+
+			<h2><?php esc_html_e( 'Share access without sharing passwords', 'glocalsaino-webpagespassworded' ); ?></h2>
+			<p style="max-width:760px;font-size:14px;">
+				<?php esc_html_e( 'When you protect a page with a password, sharing that password is the weakest link in your workflow. Anyone who receives it can forward it, anyone can save it, and changing it means notifying everyone all over again. Magic links break that cycle. Each link is a unique, signed token that grants access to one specific page. The real password stays private — only the token travels in the URL.', 'glocalsaino-webpagespassworded' ); ?>
+			</p>
+
+			<h2><?php esc_html_e( 'Access that expires on your terms', 'glocalsaino-webpagespassworded' ); ?></h2>
+			<p style="max-width:760px;font-size:14px;">
+				<?php esc_html_e( 'Every magic link you generate can have its own rules. Set it to expire after one day, one week, or one month. Limit it to a single use or a fixed number of visits. When the link expires or runs out of uses, access stops automatically — no manual intervention required. If you want the visitor to land somewhere specific when a link no longer works, add a fallback URL and they will be redirected gracefully instead of hitting a dead end.', 'glocalsaino-webpagespassworded' ); ?>
+			</p>
+
+			<h2><?php esc_html_e( 'A clear dashboard, full control', 'glocalsaino-webpagespassworded' ); ?></h2>
+			<p style="max-width:760px;font-size:14px;">
+				<?php esc_html_e( 'The Magic Links panel shows every link you have generated: the target page, the label you assigned, the expiry date, the number of uses, and the current status — active, expired, or exhausted. Revoking a link takes one click and takes effect immediately.', 'glocalsaino-webpagespassworded' ); ?>
+			</p>
+
+			<p style="margin-top:24px;">
+				<a href="https://glocalsaino.com/wppw-magic-link" target="_blank" rel="noopener noreferrer" class="button button-primary button-large">
+					<?php esc_html_e( 'Learn more and buy →', 'glocalsaino-webpagespassworded' ); ?>
+				</a>
+			</p>
 		</div>
 		<?php
 	}

@@ -36,6 +36,7 @@ if ( ! function_exists( 'glocalsaino_wppw_fs' ) ) {
 					'slug'    => 'glocalsaino-wppw-settings',
 					'pricing' => false,
 				),
+
 			) );
 		}
 
@@ -43,6 +44,9 @@ if ( ! function_exists( 'glocalsaino_wppw_fs' ) ) {
 	}
 
 	glocalsaino_wppw_fs();
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- filter names follow Freemius SDK convention fs_{tag}_{slug}.
+	add_filter( 'fs_is_pricing_page_visible_glocalsaino-webpagespassworded', '__return_false' );
+	add_filter( 'fs_has_paid_plan_account_glocalsaino-webpagespassworded',   '__return_false' );
 	do_action( 'glocalsaino_wppw_fs_loaded' );
 }
 // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals
