@@ -3,7 +3,7 @@ Contributors: glocalsaino, rafammoo
 Tags: password, protected pages, child pages, access control, shortcode
 Requires at least: 5.0
 Tested up to: 7.1
-Stable tag: 4.4.9
+Stable tag: 4.5.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -122,6 +122,12 @@ GlocalSaino WebPagesPassworded does not collect, store, or transmit any personal
 Fix: global variable names now carry the glocalsaino_wppw_ prefix (PHPCS PrefixAllGlobals compliance).
 
 == Changelog ==
+
+= 4.5.0 =
+* Architecture: removed the Freemius SDK entirely. The plugin never had premium code of its own; the SDK served no purpose beyond unnecessary overhead. No functional change for site owners — the plugin works exactly as before. The WPPW Magic Links add-on is now registered as an independent Freemius product and no longer requires the parent plugin to carry the SDK.
+
+= 4.4.10 =
+* Redesigned the "Extensions" submenu: the Magic Links add-on is now a compact card with its logo, and the page now also cross-promotes GlocalSaino Auctions Displayed by Shortcodes and GlocalSaino Layer Map Viewer, each showing "Active" automatically when already installed.
 
 = 4.4.9 =
 * All admin UI text changed to English as base language for translation support.
